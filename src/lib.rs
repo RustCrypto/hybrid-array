@@ -1,5 +1,5 @@
 #![no_std]
-#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![doc = include_str!("../README.md")]
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg",
@@ -23,10 +23,14 @@
     unused_qualifications
 )]
 
+#[cfg(feature = "std")]
+extern crate std;
+
 mod from_fn;
+mod iter;
 mod sizes;
 
-pub use crate::from_fn::FromFn;
+pub use crate::{from_fn::FromFn, iter::TryFromIteratorError};
 pub use typenum;
 pub use typenum::consts;
 
@@ -432,25 +436,6 @@ where
     }
 }
 
-impl<T, U> FromIterator<T> for Array<T, U>
-where
-    U: ArraySize,
-{
-    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
-        let mut iter = iter.into_iter();
-        let ret = Self::from_fn(|_| {
-            iter.next()
-                .expect("iterator should have enough items to fill array")
-        });
-
-        assert!(
-            iter.next().is_none(),
-            "too many items in iterator to fit in array"
-        );
-        ret
-    }
-}
-
 impl<T, U> Hash for Array<T, U>
 where
     T: Hash,
@@ -483,48 +468,6 @@ where
     #[inline]
     fn index_mut(&mut self, index: I) -> &mut Self::Output {
         IndexMut::index_mut(self.as_mut_slice(), index)
-    }
-}
-
-impl<T, U> IntoIterator for Array<T, U>
-where
-    U: ArraySize,
-{
-    type Item = T;
-    type IntoIter = <U::ArrayType<T> as IntoIterator>::IntoIter;
-
-    /// Creates a consuming iterator, that is, one that moves each value out of
-    /// the array (from start to end). The array cannot be used after calling
-    /// this unless `T` implements `Copy`, so the whole array is copied.
-    #[inline]
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
-    }
-}
-
-impl<'a, T, U> IntoIterator for &'a Array<T, U>
-where
-    U: ArraySize,
-{
-    type Item = &'a T;
-    type IntoIter = Iter<'a, T>;
-
-    #[inline]
-    fn into_iter(self) -> Iter<'a, T> {
-        self.iter()
-    }
-}
-
-impl<'a, T, U> IntoIterator for &'a mut Array<T, U>
-where
-    U: ArraySize,
-{
-    type Item = &'a mut T;
-    type IntoIter = IterMut<'a, T>;
-
-    #[inline]
-    fn into_iter(self) -> IterMut<'a, T> {
-        self.iter_mut()
     }
 }
 
