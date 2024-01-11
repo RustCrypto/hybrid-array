@@ -156,14 +156,7 @@ where
         U: Add<N>,
         Sum<U, N>: ArraySize,
     {
-        let mut result = MaybeUninit::uninit();
-        let result_ptr = result.as_mut_ptr() as *mut Self;
-
-        unsafe {
-            ptr::write(result_ptr, self);
-            ptr::write(result_ptr.add(1).cast(), other);
-            result.assume_init()
-        }
+        Array::from_iter(self.into_iter().chain(other.into_iter()))
     }
 
     /// Splits `self` at index `N` in two arrays.
