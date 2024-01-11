@@ -224,7 +224,10 @@ where
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
     pub const fn uninit() -> Self {
         // SAFETY: an array of `MaybeUninit`s is always valid.
-        unsafe { MaybeUninit::uninit().assume_init() }
+        #[allow(clippy::uninit_assumed_init)]
+        unsafe {
+            MaybeUninit::uninit().assume_init()
+        }
     }
 
     /// Extract the values from an array of `MaybeUninit` containers.
