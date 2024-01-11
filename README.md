@@ -11,8 +11,6 @@ Hybrid array type combining const generics with the expressiveness of
 [`typenum`]-based constraints, providing an alternative to [`generic-array`]
 and a incremental transition path to const generics.
 
-[Documentation][docs-link]
-
 ## About
 
 This crate uses `typenum` to enable the following features which aren't yet
