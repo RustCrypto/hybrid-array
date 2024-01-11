@@ -30,7 +30,7 @@ mod from_fn;
 mod iter;
 mod sizes;
 
-pub use crate::from_fn::FromFn;
+pub use crate::{from_fn::FromFn, iter::TryFromIteratorError};
 pub use typenum;
 pub use typenum::consts;
 
