@@ -128,7 +128,11 @@ impl<T> Drop for Guard<'_, T> {
 
         // SAFETY: the slice will only contain initialized items
         unsafe {
-            crate::ptr::drop_in_place(self.array_mut.get_unchecked_mut(..self.initialized));
+            let p: *mut T = self.array_mut.as_mut_ptr().cast();
+
+            for i in 0..self.initialized {
+                ptr::drop_in_place(p.add(i));
+            }
         }
     }
 }
