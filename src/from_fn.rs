@@ -126,7 +126,7 @@ impl<T> Drop for Guard<'_, T> {
     fn drop(&mut self) {
         debug_assert!(self.initialized <= self.array_mut.len());
 
-        // SAFETY: the slice will only contain initialized items
+        // SAFETY: the loop only iterates over initialized items
         unsafe {
             let p: *mut T = self.array_mut.as_mut_ptr().cast();
 
