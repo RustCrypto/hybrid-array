@@ -61,9 +61,7 @@ impl<T, const N: usize> FromFn<T> for [T; N] {
 
         // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
         // SAFETY: if we got here, every element of the array was initialized
-        let res: Self = unsafe { ptr::read(array.as_ptr().cast()) };
-        mem::forget(array);
-        Ok(res)
+        Ok(unsafe { ptr::read(array.as_ptr().cast()) })
     }
 }
 
