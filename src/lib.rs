@@ -70,6 +70,15 @@ where
         Self(FromFn::from_fn(cb))
     }
 
+    /// Create array fallibly where each array element `T` is returned by the `cb` call, or return
+    /// an error if any are encountered.
+    pub fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    where
+        F: FnMut(usize) -> Result<T, E>,
+    {
+        FromFn::try_from_fn(cb).map(Self)
+    }
+
     /// Returns an iterator over the array.
     #[inline]
     pub fn iter(&self) -> Iter<'_, T> {
@@ -831,6 +840,12 @@ pub trait FromFn<T>: Sized {
     fn from_fn<F>(cb: F) -> Self
     where
         F: FnMut(usize) -> T;
+
+    /// Create an array using the given callback function for each element, returning any errors
+    /// which are encountered in the given callback.
+    fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    where
+        F: FnMut(usize) -> Result<T, E>;
 }
 
 impl<T, U> FromFn<T> for Array<T, U>
@@ -844,6 +859,13 @@ where
     {
         Array::from_fn(cb)
     }
+
+    fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    where
+        F: FnMut(usize) -> Result<T, E>,
+    {
+        Array::try_from_fn(cb)
+    }
 }
 
 impl<T, const N: usize> FromFn<T> for [T; N] {
@@ -853,6 +875,29 @@ impl<T, const N: usize> FromFn<T> for [T; N] {
         F: FnMut(usize) -> T,
     {
         core::array::from_fn(cb)
+    }
+
+    // TODO(tarcieri): use `array::try_from_fn` when stable
+    fn try_from_fn<E, F>(mut cb: F) -> Result<Self, E>
+    where
+        F: FnMut(usize) -> Result<T, E>,
+    {
+        // SAFETY: an array of `MaybeUninit`s is always valid.
+        let mut array: [MaybeUninit<T>; N] = unsafe { MaybeUninit::uninit().assume_init() };
+
+        #[allow(clippy::needless_range_loop)]
+        for i in 0..N {
+            array[i].write(cb(i)?);
+        }
+
+        // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
+        let mut iter = array.into_iter();
+        Ok(Self::from_fn(|_| {
+            let item = iter.next().expect("should have enough items");
+
+            // SAFETY: if we got here, every element of the array was initialized
+            unsafe { item.assume_init() }
+        }))
     }
 }
 
