@@ -223,7 +223,13 @@ where
 {
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
     pub const fn uninit() -> Self {
-        // SAFETY: an array of `MaybeUninit`s is always valid.
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`. It is safe
+        // to assume `[MaybeUninit<T>; N]` is "initialized" because there is no initialization state
+        // for a `MaybeUninit`: it's a type for representing potentially uninitialized memory (and
+        // in this case it's uninitialized).
+        //
+        // See how `core` defines `MaybeUninit::uninit_array` for a similar example:
+        // <https://github.com/rust-lang/rust/blob/917f654/library/core/src/mem/maybe_uninit.rs#L350-L352>
         #[allow(clippy::uninit_assumed_init)]
         unsafe {
             MaybeUninit::uninit().assume_init()

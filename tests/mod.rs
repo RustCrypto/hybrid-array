@@ -1,4 +1,5 @@
 use hybrid_array::{Array, ArrayN};
+use std::mem::MaybeUninit;
 use typenum::{U0, U2, U3, U4, U5, U6, U7};
 
 const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
@@ -125,4 +126,16 @@ fn try_from_iterator_too_short() {
 fn try_from_iterator_too_long() {
     let result = Array::<u8, U5>::try_from_iter(EXAMPLE_SLICE.iter().copied());
     assert!(result.is_err());
+}
+
+#[test]
+fn maybe_uninit() {
+    let mut uninit_array = Array::<MaybeUninit<u8>, U6>::uninit();
+
+    for i in 0..6 {
+        uninit_array[i].write(EXAMPLE_SLICE[i]);
+    }
+
+    let array = unsafe { uninit_array.assume_init() };
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 }
