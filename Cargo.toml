@@ -19,3 +19,6 @@ rust-version = "1.65"
 [dependencies]
 typenum = "1.17"
 zeroize = { version = "1.7", optional = true }
+
+[features]
+std = []

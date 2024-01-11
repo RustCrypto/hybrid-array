@@ -108,3 +108,21 @@ fn from_iterator_too_short() {
 fn from_iterator_too_long() {
     let _array: Array<u8, U5> = EXAMPLE_SLICE.iter().copied().collect();
 }
+
+#[test]
+fn try_from_iterator_correct_size() {
+    let array = Array::<u8, U6>::try_from_iter(EXAMPLE_SLICE.iter().copied()).unwrap();
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
+}
+
+#[test]
+fn try_from_iterator_too_short() {
+    let result = Array::<u8, U7>::try_from_iter(EXAMPLE_SLICE.iter().copied());
+    assert!(result.is_err());
+}
+
+#[test]
+fn try_from_iterator_too_long() {
+    let result = Array::<u8, U5>::try_from_iter(EXAMPLE_SLICE.iter().copied());
+    assert!(result.is_err());
+}
