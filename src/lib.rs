@@ -217,6 +217,28 @@ where
     }
 }
 
+impl<T, U> Array<MaybeUninit<T>, U>
+where
+    U: ArraySize,
+{
+    /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
+    pub const fn uninit() -> Self {
+        // SAFETY: an array of `MaybeUninit`s is always valid.
+        unsafe { MaybeUninit::uninit().assume_init() }
+    }
+
+    /// Extract the values from an array of `MaybeUninit` containers.
+    ///
+    /// # Safety
+    ///
+    /// It is up to the caller to guarantee that all elements of the array are in an initialized
+    /// state.
+    pub unsafe fn assume_init(self) -> Array<T, U> {
+        // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
+        ptr::read(self.as_ptr().cast())
+    }
+}
+
 impl<T, U> AsRef<[T]> for Array<T, U>
 where
     U: ArraySize,
