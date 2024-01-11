@@ -74,6 +74,24 @@ fn split_ref_mut() {
 }
 
 #[test]
+fn from_fn() {
+    let array = Array::<u8, U6>::from_fn(|n| (n + 1) as u8);
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
+}
+
+#[test]
+fn try_from_fn() {
+    let array = Array::<u8, U6>::try_from_fn::<(), _>(|n| Ok((n + 1) as u8)).unwrap();
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
+
+    let err = Array::<u8, U6>::try_from_fn::<&'static str, _>(|_| Err("err"))
+        .err()
+        .unwrap();
+
+    assert_eq!(err, "err");
+}
+
+#[test]
 fn from_iterator_correct_size() {
     let array: Array<u8, U6> = EXAMPLE_SLICE.iter().copied().collect();
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);

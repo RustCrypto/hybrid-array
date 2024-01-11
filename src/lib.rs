@@ -23,8 +23,10 @@
     unused_qualifications
 )]
 
+mod from_fn;
 mod sizes;
 
+pub use crate::from_fn::FromFn;
 pub use typenum;
 pub use typenum::consts;
 
@@ -68,6 +70,15 @@ where
         F: FnMut(usize) -> T,
     {
         Self(FromFn::from_fn(cb))
+    }
+
+    /// Create array fallibly where each array element `T` is returned by the `cb` call, or return
+    /// an error if any are encountered.
+    pub fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    where
+        F: FnMut(usize) -> Result<T, E>,
+    {
+        FromFn::try_from_fn(cb).map(Self)
     }
 
     /// Returns an iterator over the array.
@@ -823,37 +834,6 @@ where
     U: ArraySize,
 {
     type Size = U;
-}
-
-/// Construct an array type from the given function.
-pub trait FromFn<T>: Sized {
-    /// Create array using the given callback function for each element.
-    fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T;
-}
-
-impl<T, U> FromFn<T> for Array<T, U>
-where
-    U: ArraySize,
-{
-    #[inline]
-    fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T,
-    {
-        Array::from_fn(cb)
-    }
-}
-
-impl<T, const N: usize> FromFn<T> for [T; N] {
-    #[inline]
-    fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T,
-    {
-        core::array::from_fn(cb)
-    }
 }
 
 /// Splits the shared slice into a slice of `N`-element arrays, starting at the beginning
