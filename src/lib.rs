@@ -217,6 +217,35 @@ where
     }
 }
 
+impl<T, U, const N: usize> Array<MaybeUninit<T>, U>
+where
+    U: ArraySize<ArrayType<MaybeUninit<T>> = [MaybeUninit<T>; N]>,
+{
+    /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
+    pub const fn uninit() -> Self {
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`. It is safe
+        // to assume `[MaybeUninit<T>; N]` is "initialized" because there is no initialization state
+        // for a `MaybeUninit`: it's a type for representing potentially uninitialized memory (and
+        // in this case it's uninitialized).
+        //
+        // See how `core` defines `MaybeUninit::uninit_array` for a similar example:
+        // <https://github.com/rust-lang/rust/blob/917f654/library/core/src/mem/maybe_uninit.rs#L350-L352>
+        // TODO(tarcieri): use `MaybeUninit::uninit_array` when stable
+        Self(unsafe { MaybeUninit::<U::ArrayType<MaybeUninit<T>>>::uninit().assume_init() })
+    }
+
+    /// Extract the values from an array of `MaybeUninit` containers.
+    ///
+    /// # Safety
+    ///
+    /// It is up to the caller to guarantee that all elements of the array are in an initialized
+    /// state.
+    pub unsafe fn assume_init(self) -> Array<T, U> {
+        // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
+        Array(ptr::read(self.0.as_ptr().cast()))
+    }
+}
+
 impl<T, U> AsRef<[T]> for Array<T, U>
 where
     U: ArraySize,
