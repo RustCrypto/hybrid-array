@@ -161,7 +161,7 @@ where
 
         unsafe {
             ptr::write(result_ptr, self);
-            ptr::write(result_ptr.add(1) as *mut _, other);
+            ptr::write(result_ptr.add(1).cast(), other);
             result.assume_init()
         }
     }
@@ -178,8 +178,8 @@ where
     {
         unsafe {
             let array = ManuallyDrop::new(self);
-            let head = ptr::read(array.as_ptr() as *const _);
-            let tail = ptr::read(array.as_ptr().add(N::USIZE) as *const _);
+            let head = ptr::read(array.as_ptr().cast());
+            let tail = ptr::read(array.as_ptr().add(N::USIZE).cast());
             (head, tail)
         }
     }
@@ -194,8 +194,8 @@ where
     {
         unsafe {
             let array_ptr = self.as_ptr();
-            let head = &*(array_ptr as *const _);
-            let tail = &*(array_ptr.add(N::USIZE) as *const _);
+            let head = &*array_ptr.cast();
+            let tail = &*array_ptr.add(N::USIZE).cast();
             (head, tail)
         }
     }
@@ -210,8 +210,8 @@ where
     {
         unsafe {
             let array_ptr = self.as_mut_ptr();
-            let head = &mut *(array_ptr as *mut _);
-            let tail = &mut *(array_ptr.add(N::USIZE) as *mut _);
+            let head = &mut *array_ptr.cast();
+            let tail = &mut *array_ptr.add(N::USIZE).cast();
             (head, tail)
         }
     }
@@ -551,7 +551,7 @@ where
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
         // array with length checked above.
-        Ok(unsafe { &*(slice.as_ptr() as *const Array<T, U>) })
+        Ok(unsafe { &*slice.as_ptr().cast() })
     }
 }
 
@@ -567,7 +567,7 @@ where
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
         // array with length checked above.
-        Ok(unsafe { &mut *(slice.as_ptr() as *mut Array<T, U>) })
+        Ok(unsafe { &mut *slice.as_mut_ptr().cast() })
     }
 }
 
@@ -796,7 +796,7 @@ pub fn slice_as_chunks<T, N: ArraySize>(buf: &[T]) -> (&[Array<T, N>], &[T]) {
     let tail_len = buf.len() - tail_pos;
     unsafe {
         let ptr = buf.as_ptr();
-        let chunks = slice::from_raw_parts(ptr as *const Array<T, N>, chunks_len);
+        let chunks = slice::from_raw_parts(ptr.cast(), chunks_len);
         let tail = slice::from_raw_parts(ptr.add(tail_pos), tail_len);
         (chunks, tail)
     }
@@ -819,7 +819,7 @@ pub fn slice_as_chunks_mut<T, N: ArraySize>(buf: &mut [T]) -> (&mut [Array<T, N>
     let tail_len = buf.len() - tail_pos;
     unsafe {
         let ptr = buf.as_mut_ptr();
-        let chunks = slice::from_raw_parts_mut(ptr as *mut Array<T, N>, chunks_len);
+        let chunks = slice::from_raw_parts_mut(ptr.cast(), chunks_len);
         let tail = slice::from_raw_parts_mut(ptr.add(tail_pos), tail_len);
         (chunks, tail)
     }

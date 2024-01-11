@@ -34,13 +34,13 @@ macro_rules! impl_array_size {
                 #[inline]
                 fn ref_from_core_array(array_ref: &[T; $len]) -> &Self {
                     // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { &*(array_ref.as_ptr() as *const Self) }
+                    unsafe { &*array_ref.as_ptr().cast() }
                 }
 
                 #[inline]
                 fn ref_from_mut_core_array(array_ref: &mut [T; $len]) -> &mut Self {
                     // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { &mut *(array_ref.as_mut_ptr() as *mut Self) }
+                    unsafe { &mut *array_ref.as_mut_ptr().cast() }
                 }
 
                 #[inline]
