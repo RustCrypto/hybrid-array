@@ -2,12 +2,12 @@ name: hybrid-array
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/hybrid-array.yml"
-      - "hybrid-array/**"
-      - "Cargo.*"
+    paths-ignore:
+      - README.md
   push:
     branches: master
+    paths-ignore:
+      - README.md
 
 permissions:
   contents: read
