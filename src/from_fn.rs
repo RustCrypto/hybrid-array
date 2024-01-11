@@ -54,7 +54,6 @@ impl<T, const N: usize> FromFn<T> for [T; N] {
     {
         // SAFETY: an array of `MaybeUninit`s is always valid.
         let mut array: [MaybeUninit<T>; N] = unsafe { MaybeUninit::uninit().assume_init() };
-
         try_from_fn_erased(&mut array, cb)?;
 
         // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
@@ -84,6 +83,7 @@ where
     while guard.initialized < guard.array_mut.len() {
         let item = cb(guard.initialized)?;
 
+        // SAFETY: the loop's condition ensures we won't push too many items
         unsafe { guard.push_unchecked(item) };
     }
 
