@@ -267,6 +267,17 @@ where
     }
 }
 
+impl<T, U, const N: usize> AsRef<Array<T, U>> for [T; N]
+where
+    Array<T, U>: ArrayOps<T, N>,
+    U: ArraySize,
+{
+    #[inline]
+    fn as_ref(&self) -> &Array<T, U> {
+        Array::ref_from_core_array(self)
+    }
+}
+
 impl<T, U> AsMut<[T]> for Array<T, U>
 where
     U: ArraySize,
