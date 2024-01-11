@@ -110,6 +110,9 @@ impl<T> Guard<'_, T> {
     /// This can only be called n-times for as many elements are in the slice.
     #[inline]
     pub unsafe fn push_unchecked(&mut self, item: T) {
+        // SAFETY: the `initialized` counter tracks the number of initialized items, so as long as
+        // this is called the correct number of times for the array size writes will always be
+        // in-bounds and to an uninitialized slot in the array.
         unsafe {
             self.array_mut
                 .get_unchecked_mut(self.initialized)
