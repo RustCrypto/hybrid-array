@@ -217,9 +217,9 @@ where
     }
 }
 
-impl<T, U> Array<MaybeUninit<T>, U>
+impl<T, U, const N: usize> Array<MaybeUninit<T>, U>
 where
-    U: ArraySize,
+    U: ArraySize<ArrayType<MaybeUninit<T>> = [MaybeUninit<T>; N]>,
 {
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
     pub const fn uninit() -> Self {
@@ -230,10 +230,8 @@ where
         //
         // See how `core` defines `MaybeUninit::uninit_array` for a similar example:
         // <https://github.com/rust-lang/rust/blob/917f654/library/core/src/mem/maybe_uninit.rs#L350-L352>
-        #[allow(clippy::uninit_assumed_init)]
-        unsafe {
-            MaybeUninit::uninit().assume_init()
-        }
+        // TODO(tarcieri): use `MaybeUninit::uninit_array` when stable
+        Self(unsafe { MaybeUninit::<U::ArrayType<MaybeUninit<T>>>::uninit().assume_init() })
     }
 
     /// Extract the values from an array of `MaybeUninit` containers.
@@ -244,7 +242,7 @@ where
     /// state.
     pub unsafe fn assume_init(self) -> Array<T, U> {
         // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
-        ptr::read(self.as_ptr().cast())
+        Array(ptr::read(self.0.as_ptr().cast()))
     }
 }
 
