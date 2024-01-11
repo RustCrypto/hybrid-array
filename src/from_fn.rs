@@ -1,7 +1,10 @@
 //! Support for constructing arrays using a provided generator function.
 
 use crate::{Array, ArraySize};
-use core::mem::{self, MaybeUninit};
+use core::{
+    mem::{self, MaybeUninit},
+    ptr,
+};
 
 /// Construct an array type from the given generator function.
 pub trait FromFn<T>: Sized {
@@ -57,13 +60,10 @@ impl<T, const N: usize> FromFn<T> for [T; N] {
         try_from_fn_erased(&mut array, cb)?;
 
         // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
-        let mut iter = array.into_iter();
-        Ok(Self::from_fn(|_| {
-            let item = iter.next().expect("should have enough items");
-
-            // SAFETY: if we got here, every element of the array was initialized
-            unsafe { item.assume_init() }
-        }))
+        // SAFETY: if we got here, every element of the array was initialized
+        let res: Self = unsafe { ptr::read(array.as_ptr().cast()) };
+        mem::forget(array);
+        Ok(res)
     }
 }
 
