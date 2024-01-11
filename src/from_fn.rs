@@ -123,6 +123,7 @@ impl<T> Drop for Guard<'_, T> {
     fn drop(&mut self) {
         debug_assert!(self.initialized <= self.array_mut.len());
 
+        // SAFETY: the slice will only contain initialized items
         unsafe {
             crate::ptr::drop_in_place(self.array_mut.get_unchecked_mut(..self.initialized));
         }
