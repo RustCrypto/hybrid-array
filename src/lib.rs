@@ -222,10 +222,10 @@ where
         // for a `MaybeUninit`: it's a type for representing potentially uninitialized memory (and
         // in this case it's uninitialized).
         //
-        // See how `core` defines `MaybeUninit::uninit_array` for a similar example:
+        // This is identical to how `core` implements `MaybeUninit::uninit_array`:
         // <https://github.com/rust-lang/rust/blob/917f654/library/core/src/mem/maybe_uninit.rs#L350-L352>
         // TODO(tarcieri): use `MaybeUninit::uninit_array` when stable
-        Self(unsafe { MaybeUninit::<U::ArrayType<MaybeUninit<T>>>::uninit().assume_init() })
+        Self(unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() })
     }
 
     /// Extract the values from an array of `MaybeUninit` containers.
