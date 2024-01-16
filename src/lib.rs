@@ -293,6 +293,17 @@ where
     }
 }
 
+impl<T, U, const N: usize> AsMut<Array<T, U>> for [T; N]
+where
+    Array<T, U>: ArrayOps<T, N>,
+    U: ArraySize,
+{
+    #[inline]
+    fn as_mut(&mut self) -> &mut Array<T, U> {
+        Array::ref_from_mut_core_array(self)
+    }
+}
+
 impl<T, U> Borrow<[T]> for Array<T, U>
 where
     U: ArraySize,
