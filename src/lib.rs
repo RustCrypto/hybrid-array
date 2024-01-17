@@ -300,7 +300,7 @@ where
 {
     #[inline]
     fn as_mut(&mut self) -> &mut Array<T, U> {
-        Array::ref_from_mut_core_array(self)
+        Array::ref_mut_from_core_array(self)
     }
 }
 
@@ -466,7 +466,7 @@ where
 {
     #[inline]
     fn from(array_ref: &'a mut [T; N]) -> &'a mut Array<T, U> {
-        <Array<T, U>>::ref_from_mut_core_array(array_ref)
+        <Array<T, U>>::ref_mut_from_core_array(array_ref)
     }
 }
 
