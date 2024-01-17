@@ -28,6 +28,25 @@ This crate exposes the following feature flags. The default is NO features.
 
 * `zeroize` - Implements [`Zeroize`](https://docs.rs/zeroize/latest/zeroize/trait.Zeroize.html) for `Array<T: Zeroize, U>`
 
+## Migrating from `GenericArray`
+
+*NOTE: this guide assumes a migration from `generic-array` v0.14*
+
+`hybrid-array` has been designed to largely be a drop-in replacement for
+`generic-array`, albeit with a public inner array type and significantly less
+`unsafe` code.
+
+Migrating should hopefully be relatively painless with the following
+substitutions in your `.rs` files:
+
+- Replace `generic_array` with `hybrid_array`
+- Replace `GenericArray<T, U>` with `Array<T, U>`
+- Replace `ArrayLength<T>` with `ArraySize`
+- Replace `<U as ArrayLength<T>>::ArrayType` with `<U as ArraySize>::ArrayType<T>`
+- Replace usages of the `arr![N; A, B, C]` macro with `Array([A, B, C])`
+
+If you have any questions, please [start a discussion].
+
 ## License
 
 Licensed under either of:
@@ -64,3 +83,4 @@ dual licensed as above, without any additional terms or conditions.
 [`generic-array`]: https://github.com/fizyk20/generic-array
 [rust-issue-60551]: https://github.com/rust-lang/rust/issues/60551
 [rust-issue-76560]: https://github.com/rust-lang/rust/issues/76560
+[start a discussion]: https://github.com/RustCrypto/hybrid-array/discussions
