@@ -571,6 +571,14 @@ where
     }
 }
 
+/// SAFETY: `Array` is a `repr(transparent)` newtype for `[T; N]`, so as long as `T: Send` it should
+/// also be `Send`.
+unsafe impl<T, U: ArraySize> Send for Array<T, U> where T: Send {}
+
+/// SAFETY: `Array` is a `repr(transparent)` newtype for `[T; N]`, so as long as `T: Sync` it should
+/// also be `Sync`.
+unsafe impl<T, U: ArraySize> Sync for Array<T, U> where T: Sync {}
+
 impl<'a, T, U> TryFrom<&'a [T]> for Array<T, U>
 where
     Self: Clone,
