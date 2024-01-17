@@ -69,7 +69,7 @@ pub trait ArrayOps<T, const N: usize>:
     fn ref_from_core_array(arr: &[T; N]) -> &Self;
 
     /// Create mutable array reference from reference to Rust's core array type.
-    fn ref_from_mut_core_array(arr: &mut [T; N]) -> &mut Self;
+    fn ref_mut_from_core_array(arr: &mut [T; N]) -> &mut Self;
 
     /// Returns an array of the same size as `self`, with function `f` applied to each element
     /// in order.
@@ -114,7 +114,7 @@ impl<T, const N: usize> ArrayOps<T, N> for [T; N] {
     }
 
     #[inline]
-    fn ref_from_mut_core_array(array_ref: &mut [T; N]) -> &mut Self {
+    fn ref_mut_from_core_array(array_ref: &mut [T; N]) -> &mut Self {
         array_ref
     }
 
