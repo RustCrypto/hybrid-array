@@ -422,7 +422,9 @@ where
 {
     #[inline]
     fn from(arr: [T; N]) -> Array<T, U> {
-        Self::from_core_array(arr)
+        // SAFETY: `Array` is a `repr(transparent)` newtype for `[T; N]` when it impls
+        // `ArrayOps<T, N>`.
+        unsafe { ptr::read(arr.as_ptr().cast()) }
     }
 }
 
