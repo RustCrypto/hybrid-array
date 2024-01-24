@@ -27,6 +27,11 @@ macro_rules! impl_array_size {
                 }
 
                 #[inline]
+                fn to_core_array(self) -> [T; $len] {
+                    self.0
+                }
+
+                #[inline]
                 fn from_core_array(arr: [T; $len]) -> Self {
                     Self(arr)
                 }
