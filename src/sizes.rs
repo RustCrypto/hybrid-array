@@ -27,11 +27,6 @@ macro_rules! impl_array_size {
                 }
 
                 #[inline]
-                fn from_core_array(arr: [T; $len]) -> Self {
-                    Self(arr)
-                }
-
-                #[inline]
                 fn ref_from_core_array(array_ref: &[T; $len]) -> &Self {
                     // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
                     unsafe { &*array_ref.as_ptr().cast() }

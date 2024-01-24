@@ -41,6 +41,7 @@ use core::{
     cmp::Ordering,
     fmt::{self, Debug},
     hash::{Hash, Hasher},
+    mem,
     mem::{ManuallyDrop, MaybeUninit},
     ops::{Add, Deref, DerefMut, Index, IndexMut, Sub},
     ptr,
@@ -422,7 +423,13 @@ where
 {
     #[inline]
     fn from(arr: [T; N]) -> Array<T, U> {
-        Self::from_core_array(arr)
+        // SAFETY: `Array` is a `repr(transparent)` newtype for `[T; N]` when it impls
+        // `ArrayOps<T, N>`.
+        unsafe {
+            let ptr = arr.as_ptr();
+            mem::forget(arr);
+            ptr::read(ptr.cast())
+        }
     }
 }
 

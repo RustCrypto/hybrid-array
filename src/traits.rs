@@ -62,9 +62,6 @@ pub trait ArrayOps<T, const N: usize>:
     /// Returns a mutable reference to the inner array.
     fn as_mut_core_array(&mut self) -> &mut [T; N];
 
-    /// Create array from Rust's core array type.
-    fn from_core_array(arr: [T; N]) -> Self;
-
     /// Create array reference from reference to Rust's core array type.
     fn ref_from_core_array(arr: &[T; N]) -> &Self;
 
@@ -101,11 +98,6 @@ impl<T, const N: usize> ArrayOps<T, N> for [T; N] {
     #[inline]
     fn as_mut_core_array(&mut self) -> &mut [T; N] {
         self
-    }
-
-    #[inline]
-    fn from_core_array(arr: [T; N]) -> Self {
-        arr
     }
 
     #[inline]
