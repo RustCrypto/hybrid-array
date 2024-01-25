@@ -252,23 +252,22 @@ where
 
 impl<T, U, const N: usize> AsRef<[T; N]> for Array<T, U>
 where
-    Self: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn as_ref(&self) -> &[T; N] {
-        self.as_core_array()
+        &self.0
     }
 }
 
 impl<T, U, const N: usize> AsRef<Array<T, U>> for [T; N]
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn as_ref(&self) -> &Array<T, U> {
-        Array::ref_from_core_array(self)
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
+        unsafe { &*self.as_ptr().cast() }
     }
 }
 
@@ -284,23 +283,22 @@ where
 
 impl<T, U, const N: usize> AsMut<[T; N]> for Array<T, U>
 where
-    Self: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn as_mut(&mut self) -> &mut [T; N] {
-        self.as_mut_core_array()
+        &mut self.0
     }
 }
 
 impl<T, U, const N: usize> AsMut<Array<T, U>> for [T; N]
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn as_mut(&mut self) -> &mut Array<T, U> {
-        Array::ref_mut_from_core_array(self)
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
+        unsafe { &mut *self.as_mut_ptr().cast() }
     }
 }
 
@@ -316,12 +314,11 @@ where
 
 impl<T, U, const N: usize> Borrow<[T; N]> for Array<T, U>
 where
-    Self: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn borrow(&self) -> &[T; N] {
-        self.as_core_array()
+        &self.0
     }
 }
 
@@ -337,12 +334,11 @@ where
 
 impl<T, U, const N: usize> BorrowMut<[T; N]> for Array<T, U>
 where
-    Self: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn borrow_mut(&mut self) -> &mut [T; N] {
-        self.as_mut_core_array()
+        &mut self.0
     }
 }
 
@@ -437,45 +433,41 @@ where
 
 impl<'a, T, U, const N: usize> From<&'a [T; N]> for &'a Array<T, U>
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn from(array_ref: &'a [T; N]) -> &'a Array<T, U> {
-        <Array<T, U>>::ref_from_core_array(array_ref)
+        array_ref.as_ref()
     }
 }
 
 impl<'a, T, U, const N: usize> From<&'a Array<T, U>> for &'a [T; N]
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn from(array_ref: &'a Array<T, U>) -> &'a [T; N] {
-        array_ref.as_core_array()
+        array_ref.as_ref()
     }
 }
 
 impl<'a, T, U, const N: usize> From<&'a mut [T; N]> for &'a mut Array<T, U>
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn from(array_ref: &'a mut [T; N]) -> &'a mut Array<T, U> {
-        <Array<T, U>>::ref_mut_from_core_array(array_ref)
+        array_ref.as_mut()
     }
 }
 
 impl<'a, T, U, const N: usize> From<&'a mut Array<T, U>> for &'a mut [T; N]
 where
-    Array<T, U>: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn from(array_ref: &'a mut Array<T, U>) -> &'a mut [T; N] {
-        array_ref.as_mut_core_array()
+        array_ref.as_mut()
     }
 }
 
