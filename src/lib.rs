@@ -417,20 +417,16 @@ where
 
 impl<T, U, const N: usize> From<[T; N]> for Array<T, U>
 where
-    Self: ArrayOps<T, N>,
-    U: ArraySize,
+    U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
     fn from(arr: [T; N]) -> Array<T, U> {
-        // SAFETY: `Array` is a `repr(transparent)` newtype for `[T; N]` when it impls
-        // `ArrayOps<T, N>`.
-        unsafe { ptr::read(ManuallyDrop::new(arr).as_ptr().cast()) }
+        Array(arr)
     }
 }
 
 impl<T, U, const N: usize> From<Array<T, U>> for [T; N]
 where
-    Array<T, U>: ArrayOps<T, N>,
     U: ArraySize<ArrayType<T> = [T; N]>,
 {
     #[inline]
