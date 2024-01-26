@@ -56,18 +56,6 @@ pub trait ArrayOps<T, const N: usize>:
     /// Not to be confused with [`AssociatedArraySize::Size`], which is [`typenum`]-based.
     const SIZE: usize;
 
-    /// Returns a reference to the inner array.
-    fn as_core_array(&self) -> &[T; N];
-
-    /// Returns a mutable reference to the inner array.
-    fn as_mut_core_array(&mut self) -> &mut [T; N];
-
-    /// Create array reference from reference to Rust's core array type.
-    fn ref_from_core_array(arr: &[T; N]) -> &Self;
-
-    /// Create mutable array reference from reference to Rust's core array type.
-    fn ref_mut_from_core_array(arr: &mut [T; N]) -> &mut Self;
-
     /// Returns an array of the same size as `self`, with function `f` applied to each element
     /// in order.
     fn map_to_core_array<F, U>(self, f: F) -> [U; N]
@@ -89,26 +77,6 @@ pub trait ArrayOps<T, const N: usize>:
 
 impl<T, const N: usize> ArrayOps<T, N> for [T; N] {
     const SIZE: usize = N;
-
-    #[inline]
-    fn as_core_array(&self) -> &[T; N] {
-        self
-    }
-
-    #[inline]
-    fn as_mut_core_array(&mut self) -> &mut [T; N] {
-        self
-    }
-
-    #[inline]
-    fn ref_from_core_array(array_ref: &[T; N]) -> &Self {
-        array_ref
-    }
-
-    #[inline]
-    fn ref_mut_from_core_array(array_ref: &mut [T; N]) -> &mut Self {
-        array_ref
-    }
 
     #[inline]
     fn map_to_core_array<F, U>(self, f: F) -> [U; N]
