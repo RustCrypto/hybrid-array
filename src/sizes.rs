@@ -17,28 +17,6 @@ macro_rules! impl_array_size {
                 const SIZE: usize = $len;
 
                 #[inline]
-                fn as_core_array(&self) -> &[T; $len] {
-                    &self.0
-                }
-
-                #[inline]
-                fn as_mut_core_array(&mut self) -> &mut [T; $len] {
-                    &mut self.0
-                }
-
-                #[inline]
-                fn ref_from_core_array(array_ref: &[T; $len]) -> &Self {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { &*array_ref.as_ptr().cast() }
-                }
-
-                #[inline]
-                fn ref_mut_from_core_array(array_ref: &mut [T; $len]) -> &mut Self {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { &mut *array_ref.as_mut_ptr().cast() }
-                }
-
-                #[inline]
                 fn map_to_core_array<F, U>(self, f: F) -> [U; $len]
                 where
                     F: FnMut(T) -> U
