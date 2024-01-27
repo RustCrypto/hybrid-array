@@ -19,6 +19,9 @@ use typenum::Unsigned;
 /// It is implemented only for a number of types defined in [`typenum::consts`].
 pub unsafe trait ArraySize: Unsigned {
     /// Array type which corresponds to this size.
+    ///
+    /// This is always defined to be `[T; N]` where `N` is the same as
+    /// [`ArraySize::USIZE`][`typenum::Unsigned::USIZE`].
     type ArrayType<T>: AssociatedArraySize<Size = Self>
         + From<Array<T, Self>>
         + FromFn<T>

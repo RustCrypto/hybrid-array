@@ -23,6 +23,44 @@
     unused_qualifications
 )]
 
+//! ## Usage
+//!
+//! The two core types in this crate are as follows:
+//!
+//! - [`Array<T, U>`]: wrapper for `[T; N]` where `U` is an [`ArraySize`] provided by [`typenum`]
+//!   whose associated [`ArraySize::ArrayType<T>`] determines the inner array size.
+//! - [`ArrayN<T, N>`]: type alias for [`Array`] which is const generic around `const N: usize`.
+//!   This provides a linkage between const generics and [`typenum`].
+//!
+//! The [`Array`] type has an inner `pub [T; N]` field, which means writing a literal can be
+//! expressed as follows:
+//!
+//! ```
+//! use hybrid_array::{Array, consts::U4};
+//!
+//! let arr: Array<u8, U4> = Array([1, 2, 3, 4]);
+//! ```
+//!
+//! ## Migrating from `GenericArray`
+//!
+//! *NOTE: this guide assumes a migration from `generic-array` v0.14*
+//!
+//! `hybrid-array` has been designed to largely be a drop-in replacement for
+//! `generic-array`, albeit with a public inner array type and significantly less
+//! `unsafe` code.
+//!
+//! Migrating should hopefully be relatively painless with the following
+//! substitutions in your `.rs` files:
+//!
+//! - Replace `generic_array` with `hybrid_array`
+//! - Replace `GenericArray<T, U>` with `Array<T, U>`
+//! - Replace `ArrayLength<T>` with `ArraySize`
+//! - Replace `<U as ArrayLength<T>>::ArrayType` with `<U as ArraySize>::ArrayType<T>`
+//! - Replace usages of the `arr![N; A, B, C]` macro with `Array([A, B, C])`
+//!
+//! If you have any questions, please
+//! [start a discussion](https://github.com/RustCrypto/hybrid-array/discussions).
+
 #[cfg(feature = "std")]
 extern crate std;
 
