@@ -1,6 +1,6 @@
 //! Macros for defining various array sizes, and their associated invocations.
 
-use super::{Array, ArrayOps, ArraySize, AssociatedArraySize};
+use super::{ArraySize, AssociatedArraySize};
 
 macro_rules! impl_array_size {
     ($($len:expr => $ty:ident),+) => {
@@ -11,42 +11,6 @@ macro_rules! impl_array_size {
 
             impl<T> AssociatedArraySize for [T; $len] {
                 type Size = typenum::$ty;
-            }
-
-            impl<T> ArrayOps<T, $len> for Array<T, typenum::$ty> {
-                const SIZE: usize = $len;
-
-                #[inline]
-                fn map_to_core_array<F, U>(self, f: F) -> [U; $len]
-                where
-                    F: FnMut(T) -> U
-                {
-                    self.0.map(f)
-                }
-
-                #[inline]
-                fn cast_slice_to_core(slice: &[Self]) -> &[[T; $len]] {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { core::slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
-                }
-
-                #[inline]
-                fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; $len]] {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { core::slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
-                }
-
-                #[inline]
-                fn cast_slice_from_core(slice: &[[T; $len]]) -> &[Self] {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { core::slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
-                }
-
-                #[inline]
-                fn cast_slice_from_core_mut(slice: &mut [[T; $len]]) -> &mut [Self] {
-                    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-                    unsafe { core::slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
-                }
             }
         )+
      };
