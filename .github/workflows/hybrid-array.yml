@@ -37,37 +37,6 @@ jobs:
           targets: ${{ matrix.target }}
       - run: cargo build --no-default-features --target ${{ matrix.target }}
 
-  test:
-    strategy:
-      matrix:
-        toolchain:
-          - 1.65.0 # MSRV
-          - stable
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: RustCrypto/actions/cargo-cache@master
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ matrix.toolchain }}
-      - run: cargo test
-      - run: cargo test --all-features
-
-  miri:
-    runs-on: ubuntu-latest
-    env:
-      MIRIFLAGS: "-Zmiri-symbolic-alignment-check -Zmiri-strict-provenance"
-    strategy:
-      matrix:
-        target:
-          - x86_64-unknown-linux-gnu
-          - s390x-unknown-linux-gnu
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-      - run: rustup component add miri && cargo miri setup
-      - run: cargo miri test --target ${{ matrix.target }} --all-features
-
   careful:
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +55,30 @@ jobs:
           components: clippy
       - run: cargo clippy --all --all-features -- -D warnings
 
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - run: cargo doc --all-features
+
+  miri:
+    runs-on: ubuntu-latest
+    env:
+      MIRIFLAGS: "-Zmiri-symbolic-alignment-check -Zmiri-strict-provenance"
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - s390x-unknown-linux-gnu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: rustup component add miri && cargo miri setup
+      - run: cargo miri test --target ${{ matrix.target }} --all-features
+
   rustfmt:
     runs-on: ubuntu-latest
     steps:
@@ -96,11 +89,18 @@ jobs:
           components: rustfmt
       - run: cargo fmt --all -- --check
 
-  doc:
+  test:
+    strategy:
+      matrix:
+        toolchain:
+          - 1.65.0 # MSRV
+          - stable
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: RustCrypto/actions/cargo-cache@master
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: stable
-      - run: cargo doc --all-features
+          toolchain: ${{ matrix.toolchain }}
+      - run: cargo test
+      - run: cargo test --all-features
