@@ -247,6 +247,52 @@ where
             (head, tail)
         }
     }
+
+    /// Splits the shared slice into a slice of `U`-element arrays, starting at the beginning
+    /// of the slice, and a remainder slice with length strictly less than `U`.
+    ///
+    /// # Panics
+    /// Panics if `U` is 0.
+    #[allow(clippy::arithmetic_side_effects)]
+    #[inline]
+    pub fn slice_as_chunks(buf: &[T]) -> (&[Self], &[T]) {
+        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+        // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
+        // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
+        // thus overflow on multiplication and underflow on substraction are impossible.
+        let chunks_len = buf.len() / U::USIZE;
+        let tail_pos = U::USIZE * chunks_len;
+        let tail_len = buf.len() - tail_pos;
+        unsafe {
+            let ptr = buf.as_ptr();
+            let chunks = slice::from_raw_parts(ptr.cast(), chunks_len);
+            let tail = slice::from_raw_parts(ptr.add(tail_pos), tail_len);
+            (chunks, tail)
+        }
+    }
+
+    /// Splits the exclusive slice into a slice of `U`-element arrays, starting at the beginning
+    /// of the slice, and a remainder slice with length strictly less than `U`.
+    ///
+    /// # Panics
+    /// Panics if `U` is 0.
+    #[allow(clippy::arithmetic_side_effects)]
+    #[inline]
+    pub fn slice_as_chunks_mut(buf: &mut [T]) -> (&mut [Self], &mut [T]) {
+        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+        // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
+        // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
+        // thus overflow on multiplication and underflow on substraction are impossible.
+        let chunks_len = buf.len() / U::USIZE;
+        let tail_pos = U::USIZE * chunks_len;
+        let tail_len = buf.len() - tail_pos;
+        unsafe {
+            let ptr = buf.as_mut_ptr();
+            let chunks = slice::from_raw_parts_mut(ptr.cast(), chunks_len);
+            let tail = slice::from_raw_parts_mut(ptr.add(tail_pos), tail_len);
+            (chunks, tail)
+        }
+    }
 }
 
 // Impls which depend on the inner array type being `[T; N]`.
@@ -720,50 +766,4 @@ fn check_slice_length<T, U: ArraySize>(slice: &[T]) -> Result<(), TryFromSliceEr
     }
 
     Ok(())
-}
-
-/// Splits the shared slice into a slice of `N`-element arrays, starting at the beginning
-/// of the slice, and a remainder slice with length strictly less than `N`.
-///
-/// # Panics
-/// Panics if `N` is 0.
-#[allow(clippy::arithmetic_side_effects)]
-#[inline]
-pub fn slice_as_chunks<T, N: ArraySize>(buf: &[T]) -> (&[Array<T, N>], &[T]) {
-    assert_ne!(N::USIZE, 0, "chunk size must be non-zero");
-    // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
-    // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
-    // thus overflow on multiplication and underflow on substraction are impossible.
-    let chunks_len = buf.len() / N::USIZE;
-    let tail_pos = N::USIZE * chunks_len;
-    let tail_len = buf.len() - tail_pos;
-    unsafe {
-        let ptr = buf.as_ptr();
-        let chunks = slice::from_raw_parts(ptr.cast(), chunks_len);
-        let tail = slice::from_raw_parts(ptr.add(tail_pos), tail_len);
-        (chunks, tail)
-    }
-}
-
-/// Splits the exclusive slice into a slice of `N`-element arrays, starting at the beginning
-/// of the slice, and a remainder slice with length strictly less than `N`.
-///
-/// # Panics
-/// Panics if `N` is 0.
-#[allow(clippy::arithmetic_side_effects)]
-#[inline]
-pub fn slice_as_chunks_mut<T, N: ArraySize>(buf: &mut [T]) -> (&mut [Array<T, N>], &mut [T]) {
-    assert_ne!(N::USIZE, 0, "chunk size must be non-zero");
-    // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
-    // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
-    // thus overflow on multiplication and underflow on substraction are impossible.
-    let chunks_len = buf.len() / N::USIZE;
-    let tail_pos = N::USIZE * chunks_len;
-    let tail_len = buf.len() - tail_pos;
-    unsafe {
-        let ptr = buf.as_mut_ptr();
-        let chunks = slice::from_raw_parts_mut(ptr.cast(), chunks_len);
-        let tail = slice::from_raw_parts_mut(ptr.add(tail_pos), tail_len);
-        (chunks, tail)
-    }
 }
