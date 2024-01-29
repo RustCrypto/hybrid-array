@@ -15,7 +15,11 @@ pub trait FromFn<T>: Sized {
 
     /// Create an array using the given generator function for each element, returning any errors
     /// which are encountered in the given generator.
-    fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    ///
+    /// # Errors
+    ///
+    /// Propagates the `E` type from the provided `F` in the event of error.
+    fn try_from_fn<E, F>(f: F) -> Result<Self, E>
     where
         F: FnMut(usize) -> Result<T, E>;
 }

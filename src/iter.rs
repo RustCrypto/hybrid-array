@@ -27,6 +27,11 @@ where
 {
     /// Construct an array from the given iterator, returning [`TryFromIteratorError`] in the event
     /// that the number of items in the iterator does not match the array size.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`TryFromIteratorError`] in the event the iterator does not return a number of
+    /// items which is exactly equal to the array size.
     pub fn try_from_iter<I: IntoIterator<Item = T>>(iter: I) -> Result<Self, TryFromIteratorError> {
         let mut iter = iter.into_iter();
         let ret = Self::try_from_fn(|_| iter.next().ok_or(TryFromIteratorError))?;
