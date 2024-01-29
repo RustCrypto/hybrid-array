@@ -47,7 +47,23 @@
 //! let arr: Array<u8, U4> = Array([1, 2, 3, 4]);
 //! ```
 //!
-//! ## Migrating from `GenericArray`
+//! ## Relationship with `generic-array`
+//!
+//! `hybrid-array` is directly inspired by the [`generic-array`] crate.
+//!
+//! However, where `generic-array` predates const generics and uses a core which is built
+//! on `unsafe` code, `hybrid-array`'s core implementation is built on safe code and const
+//! generic implementations. This allows the inner `[T; N]` field of an `Array` to be `pub` as
+//! noted above, and in general for the implementation to be significantly simpler and
+//! easier-to-audit.
+//!
+//! The only places `hybrid-array` uses unsafe are where it is absolutely necessary, primarily
+//! for reference conversions between `Array<T, U>` and `[T; N]`, and also to provide features
+//! which are not yet stable in `core`/`std`, such as [`Array::try_from_fn`].
+//!
+//! [`generic-array`]: https://docs.rs/generic-array
+//!
+//! ## Migrating from `generic-array`
 //!
 //! *NOTE: this guide assumes a migration from `generic-array` v0.14*
 //!
@@ -98,10 +114,46 @@ use zeroize::{Zeroize, ZeroizeOnDrop};
 /// Type alias for [`Array`] which is const generic around a size `N`, ala `[T; N]`.
 pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::Size>;
 
-/// Hybrid typenum-based and const generic array type.
+/// [`Array`] is a newtype for an inner `[T; N]` array where `N` is determined by a generic
+/// [`ArraySize`] parameter, which is a marker trait for a numeric value determined by ZSTs that
+/// impl the [`typenum::Unsigned`] trait.
 ///
-/// Provides the flexibility of typenum-based expressions while also
-/// allowing interoperability and a transition path to const generics.
+/// The inner `[T; N]` field is `pub` which means it's possible to write [`Array`] literals like:
+///
+/// [`Array`] is defined as `repr(transparent)`, meaning it can be used anywhere an appropriately
+/// sized `[T; N]` type is used in unsafe code / FFI.
+///
+/// ```
+/// use hybrid_array::{Array, consts::U3};
+///
+/// let arr: Array<u8, U3> = Array([1, 2, 3]);
+/// ```
+///
+/// ## [`AsRef`] impls
+///
+/// The [`AsRef`] trait can be used to convert from [`&Array<T, U>`] to `&[T; N]` and vice versa:
+///
+/// ```
+/// use hybrid_array::{Array, ArraySize, AssociatedArraySize, ArrayN, consts::U3};
+///
+/// pub fn get_third_item_hybrid_array<T, U: ArraySize>(arr_ref: &Array<T, U>) -> &T {
+///     &arr_ref[2]
+/// }
+///
+/// pub fn get_third_item_const_generic<T, const N: usize>(arr_ref: &[T; N]) -> &T
+/// where
+///     [T; N]: AssociatedArraySize + AsRef<ArrayN<T, N>>
+/// {
+///     get_third_item_hybrid_array(arr_ref.as_ref())
+/// }
+///
+/// assert_eq!(get_third_item_const_generic(&[1u8, 2, 3, 4]), &3);
+/// ```
+///
+/// Note that the [`AssociatedArraySize`] trait can be used to determine the appropriate
+/// [`Array`] size for a given `[T; N]`, and the [`ArrayN`] trait (which internally uses
+/// [`AssociatedArraySize`]) can be used to determine the specific [`Array`] type for a given
+/// const generic size.
 #[repr(transparent)]
 pub struct Array<T, U: ArraySize>(pub U::ArrayType<T>);
 
