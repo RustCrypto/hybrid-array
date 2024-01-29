@@ -12,13 +12,19 @@
     clippy::cast_precision_loss,
     clippy::cast_sign_loss,
     clippy::checked_conversions,
+    clippy::from_iter_instead_of_collect,
+    clippy::missing_errors_doc,
+    clippy::mod_module_files,
     clippy::implicit_saturating_sub,
     clippy::arithmetic_side_effects,
     clippy::panic,
     clippy::panic_in_result_fn,
     clippy::unwrap_used,
     missing_docs,
+    missing_debug_implementations,
     rust_2018_idioms,
+    trivial_casts,
+    trivial_numeric_casts,
     unused_lifetimes,
     unused_qualifications
 )]
@@ -117,11 +123,15 @@ where
 
     /// Create array fallibly where each array element `T` is returned by the `cb` call, or return
     /// an error if any are encountered.
-    pub fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    ///
+    /// # Errors
+    ///
+    /// Propagates the `E` type returned from the provided `F` in the event of error.
+    pub fn try_from_fn<E, F>(f: F) -> Result<Self, E>
     where
         F: FnMut(usize) -> Result<T, E>,
     {
-        FromFn::try_from_fn(cb).map(Self)
+        FromFn::try_from_fn(f).map(Self)
     }
 
     /// Returns an iterator over the array.
@@ -195,7 +205,7 @@ where
         U: Add<N>,
         Sum<U, N>: ArraySize,
     {
-        Array::from_iter(self.into_iter().chain(other.into_iter()))
+        self.into_iter().chain(other.into_iter()).collect()
     }
 
     /// Splits `self` at index `N` in two arrays.
