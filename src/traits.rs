@@ -1,6 +1,6 @@
 //! Trait definitions.
 
-use crate::{Array, FromFn};
+use crate::Array;
 use core::{
     borrow::{Borrow, BorrowMut},
     ops::{Index, IndexMut, Range},
@@ -28,7 +28,6 @@ pub unsafe trait ArraySize: Unsigned {
         + Borrow<[T]>
         + BorrowMut<[T]>
         + From<Array<T, Self>>
-        + FromFn<T>
         + Index<usize>
         + Index<Range<usize>>
         + IndexMut<usize>

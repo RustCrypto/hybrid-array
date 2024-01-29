@@ -2,66 +2,40 @@
 
 use crate::{Array, ArraySize};
 use core::{
+    convert::Infallible,
     mem::{self, MaybeUninit},
     ptr,
 };
 
-/// Construct an array type from the given generator function.
-pub trait FromFn<T>: Sized {
-    /// Create array using the given generator function for each element.
-    fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T;
-
-    /// Create an array using the given generator function for each element, returning any errors
-    /// which are encountered in the given generator.
-    ///
-    /// # Errors
-    ///
-    /// Propagates the `E` type from the provided `F` in the event of error.
-    fn try_from_fn<E, F>(f: F) -> Result<Self, E>
-    where
-        F: FnMut(usize) -> Result<T, E>;
-}
-
-impl<T, U> FromFn<T> for Array<T, U>
+impl<T, U> Array<T, U>
 where
     U: ArraySize,
 {
+    /// Create array where each array element `T` is returned by the `f` call.
     #[inline]
-    fn from_fn<F>(cb: F) -> Self
+    pub fn from_fn<F>(mut f: F) -> Self
     where
         F: FnMut(usize) -> T,
     {
-        Array::from_fn(cb)
+        Self::try_from_fn::<Infallible, _>(|n| Ok(f(n))).expect("should never fail")
     }
 
-    #[inline]
-    fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
+    /// Create array fallibly where each array element `T` is returned by the `f` call, or return
+    /// an error if any are encountered.
+    ///
+    /// # Errors
+    ///
+    /// Propagates the `E` type returned from the provided `F` in the event of error.
+    pub fn try_from_fn<E, F>(f: F) -> Result<Self, E>
     where
         F: FnMut(usize) -> Result<T, E>,
     {
-        Array::try_from_fn(cb)
-    }
-}
-
-impl<T, const N: usize> FromFn<T> for [T; N] {
-    #[inline]
-    fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T,
-    {
-        core::array::from_fn(cb)
-    }
-
-    // TODO(tarcieri): use `array::try_from_fn` when stable
-    fn try_from_fn<E, F>(cb: F) -> Result<Self, E>
-    where
-        F: FnMut(usize) -> Result<T, E>,
-    {
-        // SAFETY: an array of `MaybeUninit`s is always valid.
-        let mut array: [MaybeUninit<T>; N] = unsafe { MaybeUninit::uninit().assume_init() };
-        try_from_fn_erased(&mut array, cb)?;
+        // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`, i.e. an
+        // array of uninitialized memory mediated via the `MaybeUninit` interface, which is
+        // always valid.
+        #[allow(clippy::uninit_assumed_init)]
+        let mut array: Array<MaybeUninit<T>, U> = unsafe { MaybeUninit::uninit().assume_init() };
+        try_from_fn_erased(array.0.as_mut(), f)?;
 
         // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
         // SAFETY: if we got here, every element of the array was initialized
@@ -73,7 +47,7 @@ impl<T, const N: usize> FromFn<T> for [T; N] {
 ///
 /// Using a slice avoids monomorphizing for each array size.
 #[inline]
-fn try_from_fn_erased<T, E, F>(buffer: &mut [MaybeUninit<T>], mut cb: F) -> Result<(), E>
+fn try_from_fn_erased<T, E, F>(buffer: &mut [MaybeUninit<T>], mut f: F) -> Result<(), E>
 where
     F: FnMut(usize) -> Result<T, E>,
 {
@@ -83,7 +57,7 @@ where
     };
 
     while guard.initialized < guard.array_mut.len() {
-        let item = cb(guard.initialized)?;
+        let item = f(guard.initialized)?;
 
         // SAFETY: the loop's condition ensures we won't push too many items
         unsafe { guard.push_unchecked(item) };
