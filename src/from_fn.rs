@@ -13,11 +13,8 @@ where
 {
     /// Create array where each array element `T` is returned by the `f` call.
     #[inline]
-    pub fn from_fn<F>(mut f: F) -> Self
-    where
-        F: FnMut(usize) -> T,
-    {
-        Self::try_from_fn::<Infallible, _>(|n| Ok(f(n))).expect("should never fail")
+    pub fn from_fn(mut f: impl FnMut(usize) -> T) -> Self {
+        Self::try_from_fn::<Infallible>(|n| Ok(f(n))).expect("should never fail")
     }
 
     /// Create array fallibly where each array element `T` is returned by the `f` call, or return
@@ -26,10 +23,7 @@ where
     /// # Errors
     ///
     /// Propagates the `E` type returned from the provided `F` in the event of error.
-    pub fn try_from_fn<E, F>(f: F) -> Result<Self, E>
-    where
-        F: FnMut(usize) -> Result<T, E>,
-    {
+    pub fn try_from_fn<E>(f: impl FnMut(usize) -> Result<T, E>) -> Result<Self, E> {
         // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`, i.e. an
         // array of uninitialized memory mediated via the `MaybeUninit` interface, which is
         // always valid.

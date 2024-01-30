@@ -82,10 +82,10 @@ fn from_fn() {
 
 #[test]
 fn try_from_fn() {
-    let array = Array::<u8, U6>::try_from_fn::<(), _>(|n| Ok((n + 1) as u8)).unwrap();
+    let array = Array::<u8, U6>::try_from_fn::<()>(|n| Ok((n + 1) as u8)).unwrap();
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 
-    let err = Array::<u8, U6>::try_from_fn::<&'static str, _>(|_| Err("err"))
+    let err = Array::<u8, U6>::try_from_fn::<&'static str>(|_| Err("err"))
         .err()
         .unwrap();
 
