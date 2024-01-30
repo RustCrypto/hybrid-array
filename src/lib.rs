@@ -393,6 +393,7 @@ where
     ///
     /// It is up to the caller to guarantee that all elements of the array are in an initialized
     /// state.
+    #[inline]
     pub unsafe fn assume_init(self) -> Array<T, U> {
         mem::transmute_copy(&self)
     }
