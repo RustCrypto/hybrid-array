@@ -101,7 +101,7 @@ use core::{
     cmp::Ordering,
     fmt::{self, Debug},
     hash::{Hash, Hasher},
-    mem::{ManuallyDrop, MaybeUninit},
+    mem::{self, ManuallyDrop, MaybeUninit},
     ops::{Add, Deref, DerefMut, Index, IndexMut, Sub},
     ptr,
     slice::{self, Iter, IterMut},
@@ -370,21 +370,21 @@ where
     }
 }
 
-impl<T, U, const N: usize> Array<MaybeUninit<T>, U>
+impl<T, U> Array<MaybeUninit<T>, U>
 where
-    U: ArraySize<ArrayType<MaybeUninit<T>> = [MaybeUninit<T>; N]>,
+    U: ArraySize,
 {
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
-    pub const fn uninit() -> Self {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`. It is safe
-        // to assume `[MaybeUninit<T>; N]` is "initialized" because there is no initialization state
-        // for a `MaybeUninit`: it's a type for representing potentially uninitialized memory (and
-        // in this case it's uninitialized).
+    pub const fn uninit() -> Array<MaybeUninit<T>, U> {
+        // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>, N]`, i.e. an
+        // array of uninitialized memory mediated via the `MaybeUninit` interface.
         //
-        // This is identical to how `core` implements `MaybeUninit::uninit_array`:
-        // <https://github.com/rust-lang/rust/blob/917f654/library/core/src/mem/maybe_uninit.rs#L350-L352>
-        // TODO(tarcieri): use `MaybeUninit::uninit_array` when stable
-        Self(unsafe { MaybeUninit::<[MaybeUninit<T>; N]>::uninit().assume_init() })
+        // Calling `uninit().assume_init()` triggers the `clippy::uninit_assumed_init` lint, but
+        // as just mentioned the inner type we're "assuming init" for is `[MaybeUninit<T>, N]`,
+        // i.e. an array of uninitialized memory, which is always valid because definitionally no
+        // initialization is required of uninitialized memory.
+        #[allow(clippy::uninit_assumed_init)]
+        Self(unsafe { MaybeUninit::uninit().assume_init() })
     }
 
     /// Extract the values from an array of `MaybeUninit` containers.
@@ -394,8 +394,7 @@ where
     /// It is up to the caller to guarantee that all elements of the array are in an initialized
     /// state.
     pub unsafe fn assume_init(self) -> Array<T, U> {
-        // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
-        Array(ptr::read(self.0.as_ptr().cast()))
+        mem::transmute_copy(&self)
     }
 }
 
