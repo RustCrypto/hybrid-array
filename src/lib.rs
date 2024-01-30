@@ -91,7 +91,7 @@ mod iter;
 mod sizes;
 mod traits;
 
-pub use crate::{from_fn::FromFn, iter::TryFromIteratorError, traits::*};
+pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
 pub use typenum::consts;
 
@@ -165,27 +165,6 @@ impl<T, U> Array<T, U>
 where
     U: ArraySize,
 {
-    /// Create array where each array element `T` is returned by the `cb` call.
-    pub fn from_fn<F>(cb: F) -> Self
-    where
-        F: FnMut(usize) -> T,
-    {
-        Self(FromFn::from_fn(cb))
-    }
-
-    /// Create array fallibly where each array element `T` is returned by the `cb` call, or return
-    /// an error if any are encountered.
-    ///
-    /// # Errors
-    ///
-    /// Propagates the `E` type returned from the provided `F` in the event of error.
-    pub fn try_from_fn<E, F>(f: F) -> Result<Self, E>
-    where
-        F: FnMut(usize) -> Result<T, E>,
-    {
-        FromFn::try_from_fn(f).map(Self)
-    }
-
     /// Returns an iterator over the array.
     #[inline]
     pub fn iter(&self) -> Iter<'_, T> {
