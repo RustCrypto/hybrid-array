@@ -377,7 +377,8 @@ where
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
     pub const fn uninit() -> Array<MaybeUninit<T>, U> {
         // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>, N]`, i.e. an
-        // array of uninitialized memory mediated via the `MaybeUninit` interface.
+        // array of uninitialized memory mediated via the `MaybeUninit` interface, where the inner
+        // type is constrained by `ArraySize` impls which can only be added by this crate.
         //
         // Calling `uninit().assume_init()` triggers the `clippy::uninit_assumed_init` lint, but
         // as just mentioned the inner type we're "assuming init" for is `[MaybeUninit<T>, N]`,
@@ -395,6 +396,17 @@ where
     /// state.
     #[inline]
     pub unsafe fn assume_init(self) -> Array<T, U> {
+        // `Array` is a `repr(transparent)` newtype for a generic inner type which is constrained to
+        // be `[T; N]` by the `ArraySize` impls in this crate.
+        //
+        // Since we're working with a type-erased inner type and ultimately trying to convert
+        // `[MaybeUninit<T>; N]` to `[T; N]`, we can't use simpler approaches like a pointer cast
+        // or `transmute`, since the compiler can't prove to itself that the size will be the same.
+        //
+        // We've taken unique ownership of `self`, which is a `MaybeUninit` array, and as such we
+        // don't need to worry about `Drop` impls because `MaybeUninit` does not impl `Drop`.
+        // Since we have unique ownership of `self`, it's okay to make a copy because we're throwing
+        // the original away (and this should all get optimized to a noop by the compiler, anyway).
         mem::transmute_copy(&self)
     }
 }
