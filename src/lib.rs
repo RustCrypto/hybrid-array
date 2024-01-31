@@ -6,6 +6,7 @@
     html_favicon_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg"
 )]
 #![warn(
+    clippy::arithmetic_side_effects,
     clippy::cast_lossless,
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
@@ -16,7 +17,6 @@
     clippy::missing_errors_doc,
     clippy::mod_module_files,
     clippy::implicit_saturating_sub,
-    clippy::arithmetic_side_effects,
     clippy::panic,
     clippy::panic_in_result_fn,
     clippy::unwrap_used,
@@ -131,7 +131,7 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::S
 ///
 /// ## [`AsRef`] impls
 ///
-/// The [`AsRef`] trait can be used to convert from [`&Array<T, U>`] to `&[T; N]` and vice versa:
+/// The [`AsRef`] trait can be used to convert from `&Array<T, U>` to `&[T; N]` and vice versa:
 ///
 /// ```
 /// use hybrid_array::{Array, ArraySize, AssociatedArraySize, ArrayN, consts::U3};
