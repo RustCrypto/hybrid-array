@@ -24,16 +24,11 @@ where
     ///
     /// Propagates the `E` type returned from the provided `F` in the event of error.
     pub fn try_from_fn<E>(f: impl FnMut(usize) -> Result<T, E>) -> Result<Self, E> {
-        // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>; N]`, i.e. an
-        // array of uninitialized memory mediated via the `MaybeUninit` interface, which is
-        // always valid.
-        #[allow(clippy::uninit_assumed_init)]
-        let mut array: Array<MaybeUninit<T>, U> = unsafe { MaybeUninit::uninit().assume_init() };
+        let mut array = Array::<MaybeUninit<T>, U>::uninit();
         try_from_fn_erased(array.0.as_mut(), f)?;
 
-        // TODO(tarcieri): use `MaybeUninit::array_assume_init` when stable
         // SAFETY: if we got here, every element of the array was initialized
-        Ok(unsafe { ptr::read(array.as_ptr().cast()) })
+        Ok(unsafe { array.assume_init() })
     }
 }
 
