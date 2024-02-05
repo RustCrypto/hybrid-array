@@ -17,7 +17,7 @@ edition = "2021"
 rust-version = "1.65"
 
 [dependencies]
-typenum = "1.17"
+typenum = { version = "1.17", features = ["const-generics"] }
 zeroize = { version = "1.7", optional = true }
 
 [features]
