@@ -1,6 +1,6 @@
 //! Macros for defining various array sizes, and their associated invocations.
 
-use super::{ArraySize, AssociatedArraySize};
+use super::{ArraySize, AssocArraySize};
 
 macro_rules! impl_array_size {
     ($($len:expr => $ty:ident),+) => {
@@ -9,7 +9,7 @@ macro_rules! impl_array_size {
                 type ArrayType<T> = [T; $len];
             }
 
-            impl<T> AssociatedArraySize for [T; $len] {
+            impl<T> AssocArraySize for [T; $len] {
                 type Size = typenum::$ty;
             }
         )+

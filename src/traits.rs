@@ -22,7 +22,7 @@ pub unsafe trait ArraySize: Unsigned {
     ///
     /// This is always defined to be `[T; N]` where `N` is the same as
     /// [`ArraySize::USIZE`][`typenum::Unsigned::USIZE`].
-    type ArrayType<T>: AssociatedArraySize<Size = Self>
+    type ArrayType<T>: AssocArraySize<Size = Self>
         + AsRef<[T]>
         + AsMut<[T]>
         + Borrow<[T]>
@@ -37,12 +37,12 @@ pub unsafe trait ArraySize: Unsigned {
 }
 
 /// Associates an [`ArraySize`] with a given type.
-pub trait AssociatedArraySize: Sized {
+pub trait AssocArraySize: Sized {
     /// Size of an array type, expressed as a [`typenum`]-based [`ArraySize`].
     type Size: ArraySize;
 }
 
-impl<T, U> AssociatedArraySize for Array<T, U>
+impl<T, U> AssocArraySize for Array<T, U>
 where
     U: ArraySize,
 {
