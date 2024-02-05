@@ -112,7 +112,7 @@ use typenum::{Diff, Sum};
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 /// Type alias for [`Array`] which is const generic around a size `N`, ala `[T; N]`.
-pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::Size>;
+pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 
 /// [`Array`] is a newtype for an inner `[T; N]` array where `N` is determined by a generic
 /// [`ArraySize`] parameter, which is a marker trait for a numeric value determined by ZSTs that
@@ -134,7 +134,7 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::S
 /// The [`AsRef`] trait can be used to convert from `&Array<T, U>` to `&[T; N]` and vice versa:
 ///
 /// ```
-/// use hybrid_array::{Array, ArraySize, AssociatedArraySize, ArrayN, consts::U3};
+/// use hybrid_array::{Array, ArraySize, AssocArraySize, ArrayN, consts::U3};
 ///
 /// pub fn get_third_item_hybrid_array<T, U: ArraySize>(arr_ref: &Array<T, U>) -> &T {
 ///     &arr_ref[2]
@@ -142,7 +142,7 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::S
 ///
 /// pub fn get_third_item_const_generic<T, const N: usize>(arr_ref: &[T; N]) -> &T
 /// where
-///     [T; N]: AssociatedArraySize + AsRef<ArrayN<T, N>>
+///     [T; N]: AssocArraySize + AsRef<ArrayN<T, N>>
 /// {
 ///     get_third_item_hybrid_array(arr_ref.as_ref())
 /// }
@@ -150,9 +150,9 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssociatedArraySize>::S
 /// assert_eq!(get_third_item_const_generic(&[1u8, 2, 3, 4]), &3);
 /// ```
 ///
-/// Note that the [`AssociatedArraySize`] trait can be used to determine the appropriate
+/// Note that the [`AssocArraySize`] trait can be used to determine the appropriate
 /// [`Array`] size for a given `[T; N]`, and the [`ArrayN`] trait (which internally uses
-/// [`AssociatedArraySize`]) can be used to determine the specific [`Array`] type for a given
+/// [`AssocArraySize`]) can be used to determine the specific [`Array`] type for a given
 /// const generic size.
 #[repr(transparent)]
 pub struct Array<T, U: ArraySize>(pub U::ArrayType<T>);
