@@ -165,18 +165,6 @@ impl<T, U> Array<T, U>
 where
     U: ArraySize,
 {
-    /// Returns an iterator over the array.
-    #[inline]
-    pub fn iter(&self) -> Iter<'_, T> {
-        self.as_ref().iter()
-    }
-
-    /// Returns an iterator that allows modifying each value.
-    #[inline]
-    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
-        self.as_mut().iter_mut()
-    }
-
     /// Returns a slice containing the entire array. Equivalent to `&s[..]`.
     #[inline]
     pub fn as_slice(&self) -> &[T] {
@@ -226,6 +214,18 @@ where
         Self: Clone,
     {
         slice.try_into().expect("slice length mismatch")
+    }
+
+    /// Returns an iterator over the array.
+    #[inline]
+    pub fn iter(&self) -> Iter<'_, T> {
+        self.as_slice().iter()
+    }
+
+    /// Returns an iterator that allows modifying each value.
+    #[inline]
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+        self.as_mut().iter_mut()
     }
 
     /// Concatenates `self` with `other`.
@@ -408,6 +408,16 @@ where
         // Since we have unique ownership of `self`, it's okay to make a copy because we're throwing
         // the original away (and this should all get optimized to a noop by the compiler, anyway).
         mem::transmute_copy(&self)
+    }
+}
+
+impl<T, U> AsRef<Array<T, U>> for Array<T, U>
+where
+    U: ArraySize,
+{
+    #[inline]
+    fn as_ref(&self) -> &Self {
+        self
     }
 }
 
