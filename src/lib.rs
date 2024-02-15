@@ -77,6 +77,7 @@
 //! - Replace `generic_array` with `hybrid_array`
 //! - Replace `GenericArray<T, U>` with `Array<T, U>`
 //! - Replace `ArrayLength<T>` with `ArraySize`
+//! - Replace usages of the `Concat` and `Split` traits with [`Array::concat`] and [`Array::split`]
 //! - Replace `<U as ArrayLength<T>>::ArrayType` with `<U as ArraySize>::ArrayType<T>`
 //! - Replace usages of the `arr![N; A, B, C]` macro with `Array([A, B, C])`
 //!
