@@ -5,12 +5,12 @@ use super::{ArraySize, AssocArraySize};
 macro_rules! impl_array_size {
     ($($len:expr => $ty:ident),+) => {
         $(
-            unsafe impl ArraySize for typenum::$ty {
+            unsafe impl ArraySize for typenum::consts::$ty {
                 type ArrayType<T> = [T; $len];
             }
 
             impl<T> AssocArraySize for [T; $len] {
-                type Size = typenum::$ty;
+                type Size = typenum::consts::$ty;
             }
         )+
      };
@@ -280,13 +280,46 @@ impl_array_size! {
     320 => U320,
     336 => U336,
     352 => U352,
+    368 => U368,
     384 => U384,
+    400 => U400,
+    416 => U416,
+    432 => U432,
     448 => U448,
+    464 => U464,
+    480 => U480,
+    496 => U496,
     512 => U512,
+    528 => U528,
+    544 => U544,
+    560 => U560,
+    576 => U576,
+    592 => U592,
+    608 => U608,
+    624 => U624,
+    640 => U640,
+    656 => U656,
+    672 => U672,
+    688 => U688,
+    704 => U704,
+    720 => U720,
+    736 => U736,
+    752 => U752,
     768 => U768,
+    784 => U784,
+    800 => U800,
+    816 => U816,
+    832 => U832,
+    848 => U848,
+    864 => U864,
+    880 => U880,
     896 => U896,
-    1024 => U1024,
-    2048 => U2048,
-    4096 => U4096,
-    8192 => U8192
+    912 => U912,
+    928 => U928,
+    944 => U944,
+    960 => U960,
+    976 => U976,
+    992 => U992,
+    1008 => U1008,
+    1024 => U1024
 }
