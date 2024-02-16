@@ -1,16 +1,43 @@
 //! Macros for defining various array sizes, and their associated invocations.
 
 use super::{ArraySize, AssocArraySize};
+use typenum::consts::*;
+
+/// Additional typenum size aliases beyond what are normally provided.
+///
+/// These are defined using their component bits rather than `Add` to avoid conflicting impls.
+#[rustfmt::skip]
+pub mod extra_sizes {
+    use typenum::{UInt, UTerm, B0, B1};
+
+    pub type U1088 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1152 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1184 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1472 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B1>, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1536 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1568 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1600 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U1632 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U2336 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U2368 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U2400 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U3072 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U3104 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
+    pub type U3136 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
+    pub type U3168 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
+}
+
+pub use extra_sizes::*;
 
 macro_rules! impl_array_size {
     ($($len:expr => $ty:ident),+) => {
         $(
-            unsafe impl ArraySize for typenum::consts::$ty {
+            unsafe impl ArraySize for $ty {
                 type ArrayType<T> = [T; $len];
             }
 
             impl<T> AssocArraySize for [T; $len] {
-                type Size = typenum::consts::$ty;
+                type Size = $ty;
             }
         )+
      };
@@ -321,5 +348,22 @@ impl_array_size! {
     976 => U976,
     992 => U992,
     1008 => U1008,
-    1024 => U1024
+    1024 => U1024,
+    1088 => U1088,
+    1152 => U1152,
+    1184 => U1184,
+    1472 => U1472,
+    1536 => U1536,
+    1568 => U1568,
+    1600 => U1600,
+    1632 => U1632,
+    2048 => U2048,
+    2336 => U2336,
+    2368 => U2368,
+    2400 => U2400,
+    3072 => U3072,
+    3104 => U3104,
+    3136 => U3136,
+    3168 => U3168,
+    4096 => U4096
 }
