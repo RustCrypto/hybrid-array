@@ -6,26 +6,34 @@ use typenum::{consts::*, Unsigned};
 /// Additional typenum size aliases beyond what are normally provided.
 ///
 /// These are defined using their component bits rather than `Add` to avoid conflicting impls.
-#[rustfmt::skip]
 pub mod extra_sizes {
     use typenum::{UInt, UTerm, B0, B1};
 
-    pub type U1088 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1152 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1184 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1408 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1472 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B1>, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1536 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1568 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1600 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U1632 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U2336 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U2368 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U2400 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B0>, B0>, B1>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U3072 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U3104 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>;
-    pub type U3136 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B0>, B0>, B0>, B0>, B0>, B0>;
-    pub type U3168 = UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UInt<UTerm, B1>, B1>, B0>, B0>, B0>, B1>, B1>, B0>, B0>, B0>, B0>, B0>;
+    // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
+    // little-endian representation of the integer in question.  For example, uint!(1 1 0 1 0 0 1) is
+    // U75 (not U105).
+    macro_rules! uint {
+        () => { UTerm };
+        (0 $($bs:tt)*) => { UInt< uint!($($bs)*), B0 > };
+        (1 $($bs:tt)*) => { UInt< uint!($($bs)*), B1 > };
+    }
+
+    pub type U1088 = uint!(0 0 0 0 0 0 1 0 0 0 1  );
+    pub type U1152 = uint!(0 0 0 0 0 0 0 1 0 0 1  );
+    pub type U1184 = uint!(0 0 0 0 0 1 0 1 0 0 1  );
+    pub type U1408 = uint!(0 0 0 0 0 0 0 1 1 0 1  );
+    pub type U1472 = uint!(0 0 0 0 0 0 1 1 1 0 1  );
+    pub type U1536 = uint!(0 0 0 0 0 0 0 0 0 1 1  );
+    pub type U1568 = uint!(0 0 0 0 0 1 0 0 0 1 1  );
+    pub type U1600 = uint!(0 0 0 0 0 0 1 0 0 1 1  );
+    pub type U1632 = uint!(0 0 0 0 0 1 1 0 0 1 1  );
+    pub type U2336 = uint!(0 0 0 0 0 1 0 0 1 0 0 1);
+    pub type U2368 = uint!(0 0 0 0 0 0 1 0 1 0 0 1);
+    pub type U2400 = uint!(0 0 0 0 0 1 1 0 1 0 0 1);
+    pub type U3072 = uint!(0 0 0 0 0 0 0 0 0 0 1 1);
+    pub type U3104 = uint!(0 0 0 0 0 1 0 0 0 0 1 1);
+    pub type U3136 = uint!(0 0 0 0 0 0 1 0 0 0 1 1);
+    pub type U3168 = uint!(0 0 0 0 0 1 1 0 0 0 1 1);
 }
 
 pub use extra_sizes::*;
