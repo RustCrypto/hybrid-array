@@ -334,6 +334,9 @@ impl_array_sizes! {
     992 => U992,
     1008 => U1008,
     1024 => U1024,
+    2048 => U2048,
+    4096 => U4096,
+    8192 => U8192,
 }
 
 /// Additional typenum size aliases beyond what are normally provided.
@@ -607,7 +610,6 @@ pub mod extra_sizes {
         2000 => U2000,
         2016 => U2016,
         2032 => U2032,
-        2048 => U2048,
         2064 => U2064,
         2080 => U2080,
         2096 => U2096,
@@ -735,6 +737,5 @@ pub mod extra_sizes {
         4048 => U4048,
         4064 => U4064,
         4080 => U4080,
-        4096 => U4096,
     }
 }
