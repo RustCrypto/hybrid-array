@@ -546,6 +546,19 @@ pub mod extra_sizes {
     pub type U4064 = uint!(0 0 0 0 0 1 1 1 1 1 1 1);
     pub type U4080 = uint!(0 0 0 0 1 1 1 1 1 1 1 1);
 
+    // ML-DSA sizes
+    pub type U2420 = uint!(0 0 1 0 1 1 1 0 1 0 0 1);
+    pub type U3293 = uint!(1 0 1 1 1 0 1 1 0 0 1 1);
+    pub type U4595 = uint!(1 1 0 0 1 1 1 1 1 0 0 0 1);
+
+    // SLH-DSA sizes
+    pub type U7856 = uint!(0 0 0 0 1 1 0 1 0 1 1 1 1);
+    pub type U16224 = uint!(0 0 0 0 0 1 1 0 1 1 1 1 1 1);
+    pub type U17088 = uint!(0 0 0 0 0 0 1 1 0 1 0 0 0 0 1);
+    pub type U29792 = uint!(0 0 0 0 0 1 1 0 0 0 1 0 1 1 1);
+    pub type U35664 = uint!(0 0 0 0 1 0 1 0 1 1 0 1 0 0 0 1);
+    pub type U49856 = uint!(0 0 0 0 0 0 1 1 0 1 0 0 0 0 1 1);
+
     impl_array_sizes! {
         1040 => U1040,
         1056 => U1056,
@@ -737,5 +750,22 @@ pub mod extra_sizes {
         4048 => U4048,
         4064 => U4064,
         4080 => U4080,
+    }
+
+    // ML-DSA sizes
+    impl_array_sizes! {
+        2420 => U2420,
+        3293 => U3293,
+        4595 => U4595,
+    }
+
+    // SLH-DSA sizes
+    impl_array_sizes! {
+        7856 => U7856,
+        16224 => U16224,
+        17088 => U17088,
+        29792 => U29792,
+        35664 => U35664,
+        49856 => U49856,
     }
 }
