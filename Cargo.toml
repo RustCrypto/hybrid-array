@@ -22,3 +22,4 @@ zeroize = { version = "1.7", optional = true }
 
 [features]
 std = []
+extra-sizes = []

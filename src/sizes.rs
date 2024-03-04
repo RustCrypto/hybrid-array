@@ -4,7 +4,7 @@
 //!
 //! - 0-256
 //! - 272-1024 (multiples of 16)
-//! - 1040-4096 (multiples of 32)
+//! - when the `extra-sizes` feature is enabled: 1040-4096 (multiples of 32)
 
 use super::{ArraySize, AssocArraySize};
 use typenum::consts::*;
@@ -342,6 +342,7 @@ impl_array_sizes! {
 /// Additional typenum size aliases beyond what are normally provided.
 ///
 /// These are defined using their component bits rather than `Add` to avoid conflicting impls.
+#[cfg(feature = "extra-sizes")]
 pub mod extra_sizes {
     use super::*;
     use typenum::{UInt, UTerm};
