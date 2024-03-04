@@ -139,3 +139,18 @@ fn maybe_uninit() {
     let array = unsafe { uninit_array.assume_init() };
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 }
+
+#[test]
+fn test_functional_map() {
+    let base = Array::<u8, U4>::from([1, 2, 3, 4]);
+    let expected = Array::<u8, U4>::from([2, 3, 4, 5]);
+    assert_eq!(base.map(|item| item + 1), expected);
+}
+
+#[test]
+fn test_functional_zip() {
+    let base = Array::<u8, U4>::from([1, 2, 3, 4]);
+    let with = Array::<u8, U4>::from([2, 3, 4, 5]);
+    let expected = Array::<u8, U4>::from([2, 6, 12, 20]);
+    assert_eq!(base.zip(with, |item, rhs| item * rhs), expected);
+}

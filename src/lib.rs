@@ -91,6 +91,7 @@ mod from_fn;
 mod iter;
 mod sizes;
 mod traits;
+mod zip;
 
 pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
