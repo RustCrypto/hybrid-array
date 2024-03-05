@@ -229,6 +229,15 @@ where
         self.as_mut().iter_mut()
     }
 
+    /// Returns an array of the same size as `self`, with function `f` applied to each element in
+    /// order.
+    pub fn map<F, O>(self, f: F) -> Array<O, U>
+    where
+        F: FnMut(T) -> O,
+    {
+        self.into_iter().map(f).collect()
+    }
+
     /// Concatenates `self` with `other`.
     #[inline]
     pub fn concat<N>(self, other: Array<T, N>) -> Array<T, Sum<U, N>>
