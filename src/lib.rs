@@ -355,28 +355,28 @@ where
     #[inline]
     pub fn cast_slice_to_core(slice: &[Self]) -> &[[T; N]] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { core::slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
+        unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
     }
 
     /// Transform mutable slice to mutable slice of core array type.
     #[inline]
     pub fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; N]] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { core::slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
+        unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
 
     /// Transform slice to slice of core array type.
     #[inline]
     pub fn cast_slice_from_core(slice: &[[T; N]]) -> &[Self] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { core::slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
+        unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
     }
 
     /// Transform mutable slice to mutable slice of core array type.
     #[inline]
     pub fn cast_slice_from_core_mut(slice: &mut [[T; N]]) -> &mut [Self] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { core::slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
+        unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
 }
 
