@@ -42,7 +42,7 @@
 //! expressed as follows:
 //!
 //! ```
-//! use hybrid_array::{Array, consts::U4};
+//! use hybrid_array::{Array, sizes::U4};
 //!
 //! let arr: Array<u8, U4> = Array([1, 2, 3, 4]);
 //! ```
@@ -93,13 +93,6 @@ mod from_fn;
 mod iter;
 mod traits;
 
-/// Legacy compatibility for `hybrid_array::consts`, which has been replaced by the [`sizes`]
-/// module instead.
-#[deprecated(since = "0.2.0", note = "use `sizes` instead")]
-pub mod consts {
-    pub use crate::sizes::*;
-}
-
 pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
 
@@ -132,7 +125,7 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 /// sized `[T; N]` type is used in unsafe code / FFI.
 ///
 /// ```
-/// use hybrid_array::{Array, consts::U3};
+/// use hybrid_array::{Array, sizes::U3};
 ///
 /// let arr: Array<u8, U3> = Array([1, 2, 3]);
 /// ```
@@ -142,7 +135,7 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 /// The [`AsRef`] trait can be used to convert from `&Array<T, U>` to `&[T; N]` and vice versa:
 ///
 /// ```
-/// use hybrid_array::{Array, ArraySize, AssocArraySize, ArrayN, consts::U3};
+/// use hybrid_array::{Array, ArraySize, AssocArraySize, ArrayN, sizes::U3};
 ///
 /// pub fn get_third_item_hybrid_array<T, U: ArraySize>(arr_ref: &Array<T, U>) -> &T {
 ///     &arr_ref[2]
