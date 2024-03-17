@@ -1,14 +1,17 @@
-//! Macros for defining various array sizes, and their associated invocations.
+//! Supported array sizes: [`typenum::Unsigned`] types with an [`ArraySize`] impl.
 //!
 //! We support the following array sizes by default:
 //!
 //! - 0-512
 //! - 528-1024 (multiples of 16)
+//! - 2048, 4096, 8192
 //!
-//! When the `extra-sizes` feature is enabled: 1040-4096 (multiples of 32)
+//! When the `extra-sizes` feature is enabled: 1040-4064 (multiples of 32)
 
 use super::{ArraySize, AssocArraySize};
-use typenum::consts::*;
+
+#[cfg(feature = "extra-sizes")]
+pub use extra_sizes::*;
 
 /// Implement the `ArraySize` and `AssocArraySize` traits for a given list of `N => UN, ...`
 /// mappings.
@@ -29,7 +32,17 @@ macro_rules! impl_array_sizes {
      };
 }
 
-impl_array_sizes! {
+/// Implement array sizes, also importing the relevant constants.
+macro_rules! impl_array_sizes_with_import {
+    ($($len:expr => $ty:ident),+ $(,)?) => {
+        $(
+            pub use typenum::consts::$ty;
+            impl_array_sizes!($len => $ty);
+        )+
+     };
+}
+
+impl_array_sizes_with_import! {
     0 => U0,
     1 => U1,
     2 => U2,
@@ -584,9 +597,13 @@ impl_array_sizes! {
 ///
 /// These are defined using their component bits rather than `Add` to avoid conflicting impls.
 #[cfg(feature = "extra-sizes")]
-pub mod extra_sizes {
-    use super::*;
-    use typenum::{UInt, UTerm};
+#[allow(missing_docs)]
+mod extra_sizes {
+    use super::{ArraySize, AssocArraySize};
+    use typenum::{
+        consts::{B0, B1},
+        UInt, UTerm,
+    };
 
     // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
     // little-endian representation of the integer in question.  For example, uint!(1 1 0 1 0 0 1) is
