@@ -8,12 +8,6 @@ const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
 const _FOO: ArrayN<u8, 4> = Array([1, 2, 3, 4]);
 
 #[test]
-fn clone_from_slice() {
-    let array = Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
-    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
-}
-
-#[test]
 fn tryfrom_slice_for_array() {
     assert!(Array::<u8, U0>::try_from(EXAMPLE_SLICE).is_err());
     assert!(Array::<u8, U3>::try_from(EXAMPLE_SLICE).is_err());
@@ -37,8 +31,8 @@ fn tryfrom_slice_for_array_ref() {
 
 #[test]
 fn concat() {
-    let prefix = Array::<u8, U2>::clone_from_slice(&EXAMPLE_SLICE[..2]);
-    let suffix = Array::<u8, U4>::clone_from_slice(&EXAMPLE_SLICE[2..]);
+    let prefix = Array::<u8, U2>::try_from(&EXAMPLE_SLICE[..2]).unwrap();
+    let suffix = Array::<u8, U4>::try_from(&EXAMPLE_SLICE[2..]).unwrap();
 
     let array = prefix.concat(suffix);
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);
@@ -46,8 +40,7 @@ fn concat() {
 
 #[test]
 fn split() {
-    let array = Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
-
+    let array = Array::<u8, U6>::try_from(EXAMPLE_SLICE).unwrap();
     let (prefix, suffix) = array.split::<U2>();
 
     assert_eq!(prefix.as_slice(), &EXAMPLE_SLICE[..2]);
@@ -56,8 +49,7 @@ fn split() {
 
 #[test]
 fn split_ref() {
-    let array = Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
-
+    let array = Array::<u8, U6>::try_from(EXAMPLE_SLICE).unwrap();
     let (prefix, suffix) = array.split_ref::<U3>();
 
     assert_eq!(prefix.as_slice(), &EXAMPLE_SLICE[..3]);
@@ -66,8 +58,7 @@ fn split_ref() {
 
 #[test]
 fn split_ref_mut() {
-    let array = &mut Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
-
+    let array = &mut Array::<u8, U6>::try_from(EXAMPLE_SLICE).unwrap();
     let (prefix, suffix) = array.split_ref_mut::<U4>();
 
     assert_eq!(prefix.as_slice(), &EXAMPLE_SLICE[..4]);
@@ -141,8 +132,15 @@ fn maybe_uninit() {
 }
 
 #[test]
-fn test_map() {
+fn map() {
     let base = Array::<u8, U4>::from([1, 2, 3, 4]);
     let expected = Array::<u16, U4>::from([2, 3, 4, 5]);
     assert_eq!(base.map(|item| (item as u16) + 1), expected);
+}
+
+#[test]
+#[allow(deprecated)]
+fn clone_from_slice() {
+    let array = Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 }
