@@ -23,3 +23,7 @@ zeroize = { version = "1.7", optional = true }
 [features]
 std = []
 extra-sizes = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
