@@ -178,45 +178,6 @@ where
         self.0.as_mut()
     }
 
-    /// Convert the given slice into a reference to a hybrid array.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the slice's length doesn't match the array type.
-    // TODO(tarcieri): deprecate this before the v0.2 release
-    // #[deprecated(since = "0.2.0", note = "use TryFrom instead")]
-    #[inline]
-    pub fn from_slice(slice: &[T]) -> &Self {
-        slice.try_into().expect("slice length mismatch")
-    }
-
-    /// Convert the given mutable slice to a mutable reference to a hybrid array.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the slice's length doesn't match the array type.
-    // TODO(tarcieri): deprecate this before the v0.2 release
-    // #[deprecated(since = "0.2.0", note = "use TryFrom instead")]
-    #[inline]
-    pub fn from_mut_slice(slice: &mut [T]) -> &mut Self {
-        slice.try_into().expect("slice length mismatch")
-    }
-
-    /// Clone the contents of the slice as a new hybrid array.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the slice's length doesn't match the array type.
-    // TODO(tarcieri): deprecate this before the v0.2 release
-    // #[deprecated(since = "0.2.0", note = "use TryFrom instead")]
-    #[inline]
-    pub fn clone_from_slice(slice: &[T]) -> Self
-    where
-        Self: Clone,
-    {
-        slice.try_into().expect("slice length mismatch")
-    }
-
     /// Returns an iterator over the array.
     #[inline]
     pub fn iter(&self) -> Iter<'_, T> {
@@ -343,6 +304,42 @@ where
             let tail = slice::from_raw_parts_mut(ptr.add(tail_pos), tail_len);
             (chunks, tail)
         }
+    }
+
+    /// Convert the given slice into a reference to a hybrid array.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the slice's length doesn't match the array type.
+    #[deprecated(since = "0.2.0", note = "use `TryFrom` instead")]
+    #[inline]
+    pub fn from_slice(slice: &[T]) -> &Self {
+        slice.try_into().expect("slice length mismatch")
+    }
+
+    /// Convert the given mutable slice to a mutable reference to a hybrid array.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the slice's length doesn't match the array type.
+    #[deprecated(since = "0.2.0", note = "use `TryFrom` instead")]
+    #[inline]
+    pub fn from_mut_slice(slice: &mut [T]) -> &mut Self {
+        slice.try_into().expect("slice length mismatch")
+    }
+
+    /// Clone the contents of the slice as a new hybrid array.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the slice's length doesn't match the array type.
+    #[deprecated(since = "0.2.0", note = "use `TryFrom` instead")]
+    #[inline]
+    pub fn clone_from_slice(slice: &[T]) -> Self
+    where
+        Self: Clone,
+    {
+        slice.try_into().expect("slice length mismatch")
     }
 }
 
