@@ -87,14 +87,21 @@
 #[cfg(feature = "std")]
 extern crate std;
 
+pub mod sizes;
+
 mod from_fn;
 mod iter;
-mod sizes;
 mod traits;
+
+/// Legacy compatibility for `hybrid_array::consts`, which has been replaced by the [`sizes`]
+/// module instead.
+#[deprecated(since = "0.2.0", note = "use `sizes` instead")]
+pub mod consts {
+    pub use crate::sizes::*;
+}
 
 pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
-pub use typenum::consts;
 
 use core::{
     array::TryFromSliceError,
