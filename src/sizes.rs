@@ -602,7 +602,8 @@ mod extra_sizes {
     use super::{ArraySize, AssocArraySize};
     use typenum::{
         consts::{B0, B1},
-        UInt, UTerm,
+        UInt, UTerm, U1007, U1013, U1014, U653, U654, U761, U762, U857, U858, U865, U953, U954,
+        U994,
     };
 
     // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
@@ -804,7 +805,23 @@ mod extra_sizes {
     pub type U4048 = uint!(0 0 0 0 1 0 1 1 1 1 1 1);
     pub type U4064 = uint!(0 0 0 0 0 1 1 1 1 1 1 1);
     pub type U4080 = uint!(0 0 0 0 1 1 1 1 1 1 1 1);
-
+    //NTRU-PRIME sizes
+    pub type U1158 = uint!(0 1 1 0 0 0 0 1 0 0 1);
+    pub type U1277 = uint!(1 0 1 1 1 1 1 1 0 0 1);
+    pub type U1278 = uint!(0 1 1 1 1 1 1 1 0 0 1);
+    pub type U1305 = uint!(1 0 0 1 1 0 0 0 1 0 1);
+    pub type U1317 = uint!(1 0 1 0 0 1 0 0 1 0 1);
+    pub type U1322 = uint!(0 1 0 1 0 1 0 0 1 0 1);
+    pub type U1423 = uint!(1 1 1 1 0 0 0 1 1 0 1);
+    pub type U1505 = uint!(1 0 0 0 0 1 1 1 1 0 1);
+    pub type U1521 = uint!(1 0 0 0 1 1 1 1 1 0 1);
+    pub type U1623 = uint!(1 1 1 0 1 0 1 0 0 1 1);
+    pub type U1713 = uint!(1 0 0 0 1 1 0 1 0 1 1);
+    pub type U1815 = uint!(1 1 1 0 1 0 0 0 1 1 1);
+    pub type U1905 = uint!(1 0 0 0 1 1 1 0 1 1 1);
+    pub type U2025 = uint!(1 0 0 1 0 1 1 1 1 1 1);
+    pub type U2552 = uint!(0 0 0 1 1 1 1 1 1 0 0 1);
+    pub type U2067 = uint!(1 1 0 0 1 0 0 0 0 0 0 1);
     // ML-DSA sizes
     pub type U2420 = uint!(0 0 1 0 1 1 1 0 1 0 0 1);
     pub type U3293 = uint!(1 0 1 1 1 0 1 1 0 0 1 1);
@@ -1011,6 +1028,38 @@ mod extra_sizes {
         4080 => U4080,
     }
 
+    // NTRU-Prime sizes
+    impl_array_sizes! {
+        653 => U653,
+        654 => U654,
+        761 => U761,
+        762 => U762,
+        857 => U857,
+        865 => U865,
+        858 => U858,
+        953 => U953,
+        954 => U954,
+        994 => U994,
+        1007 => U1007,
+        1013 => U1013,
+        1014 => U1014,
+        1158 => U1158,
+        1277 => U1277,
+        1278 => U1278,
+        1305 => U1305,
+        1317 => U1317,
+        1322 => U1322,
+        1423 => U1423,
+        1505 => U1505,
+        1521 => U1521,
+        1623 => U1623,
+        1713 => U1713,
+        1815 => U1815,
+        1905 => U1905,
+        2025 => U2025,
+        2552 => U2552,
+        2067 => U2067,
+    }
     // ML-DSA sizes
     impl_array_sizes! {
         2420 => U2420,
