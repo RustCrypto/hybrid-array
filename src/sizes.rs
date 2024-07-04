@@ -8,8 +8,6 @@
 //!
 //! When the `extra-sizes` feature is enabled: 1040-4064 (multiples of 32)
 
-use super::{ArraySize, AssocArraySize};
-
 #[cfg(feature = "extra-sizes")]
 pub use extra_sizes::*;
 
@@ -21,11 +19,11 @@ pub use extra_sizes::*;
 macro_rules! impl_array_sizes {
     ($($len:expr => $ty:ident),+ $(,)?) => {
         $(
-            unsafe impl ArraySize for $ty {
+            unsafe impl crate::ArraySize for $ty {
                 type ArrayType<T> = [T; $len];
             }
 
-            impl<T> AssocArraySize for [T; $len] {
+            impl<T> crate::AssocArraySize for [T; $len] {
                 type Size = $ty;
             }
         )+
@@ -599,7 +597,6 @@ impl_array_sizes_with_import! {
 #[cfg(feature = "extra-sizes")]
 #[allow(missing_docs)]
 mod extra_sizes {
-    use super::{ArraySize, AssocArraySize};
     // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
     // little-endian representation of the integer in question.  For example, uint!(1 1 0 1 0 0 1) is
     // U75 (not U105).
