@@ -6,8 +6,14 @@
 //! - 528-1024 (multiples of 16)
 //! - 2048, 4096, 8192
 //!
-//! When the `extra-sizes` feature is enabled: 1040-4064 (multiples of 32)
+//! When the `extra-sizes` feature is enabled: 1025-4999
 
+/// Additional typenum size aliases beyond what are normally provided.
+///
+/// These are automatically generated.
+#[cfg(feature = "extra-sizes")]
+#[allow(missing_docs)]
+mod auto_gen;
 /// Additional typenum size aliases beyond what are normally provided.
 ///
 /// These are defined using their component bits rather than `Add` to avoid conflicting impls.
@@ -16,6 +22,8 @@
 mod extra_sizes;
 mod macros;
 
+#[cfg(feature = "extra-sizes")]
+pub use auto_gen::*;
 #[cfg(feature = "extra-sizes")]
 pub use extra_sizes::*;
 use macros::*;
