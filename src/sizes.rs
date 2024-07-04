@@ -600,18 +600,13 @@ impl_array_sizes_with_import! {
 #[allow(missing_docs)]
 mod extra_sizes {
     use super::{ArraySize, AssocArraySize};
-    use typenum::{
-        consts::{B0, B1},
-        UInt, UTerm,
-    };
-
     // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
     // little-endian representation of the integer in question.  For example, uint!(1 1 0 1 0 0 1) is
     // U75 (not U105).
     macro_rules! uint {
-        () => { UTerm };
-        (0 $($bs:tt)*) => { UInt< uint!($($bs)*), B0 > };
-        (1 $($bs:tt)*) => { UInt< uint!($($bs)*), B1 > };
+        () => { typenum::UTerm };
+        (0 $($bs:tt)*) => { typenum::UInt< uint!($($bs)*), typenum::B0 > };
+        (1 $($bs:tt)*) => { typenum::UInt< uint!($($bs)*), typenum::B1 > };
     }
 
     pub type U1040 = uint!(0 0 0 0 1 0 0 0 0 0 1);
