@@ -15,6 +15,13 @@ use typenum::Unsigned;
 /// `ArrayType` MUST be an array with a number of elements exactly equal to
 /// [`Self::Size::USIZE`]. Breaking this requirement will cause undefined behavior.
 pub unsafe trait ArraySize: Sized + 'static {
+    #[doc(hidden)]
+    const __CHECK_INVARIANT: () = {
+        let a = <Self::Size as Unsigned>::USIZE;
+        let b = core::mem::size_of::<Self::ArrayType<u8>>();
+        assert!(a == b, "ArraySize invariant violated");
+    };
+
     /// The size underlying the array.
     type Size: Unsigned;
 

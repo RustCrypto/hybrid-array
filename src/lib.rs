@@ -613,6 +613,7 @@ where
 {
     #[inline]
     fn from(arr: [T; N]) -> Array<T, U> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         Array(arr)
     }
 }
@@ -774,6 +775,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Array<T, U>, TryFromSliceError> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         <&'a Self>::try_from(slice).map(Clone::clone)
     }
 }
@@ -786,6 +788,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Self, TryFromSliceError> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         check_slice_length::<T, U>(slice)?;
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
@@ -802,6 +805,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a mut [T]) -> Result<Self, TryFromSliceError> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         check_slice_length::<T, U>(slice)?;
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
