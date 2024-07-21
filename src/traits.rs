@@ -13,17 +13,16 @@ use typenum::Unsigned;
 /// # Safety
 ///
 /// `ArrayType` MUST be an array with a number of elements exactly equal to
-/// [`Unsigned::USIZE`]. Breaking this requirement will cause undefined behavior.
-///
-/// NOTE: This trait is effectively sealed and can not be implemented by third-party crates.
-/// It is implemented only for a number of types defined in [`typenum::consts`].
-pub unsafe trait ArraySize: Unsigned {
+/// [`Size::USIZE`]. Breaking this requirement will cause undefined behavior.
+pub unsafe trait ArraySize: Sized + 'static {
+    /// The size underlying
+    type Size: Unsigned;
+
     /// Array type which corresponds to this size.
     ///
     /// This is always defined to be `[T; N]` where `N` is the same as
     /// [`ArraySize::USIZE`][`typenum::Unsigned::USIZE`].
-    type ArrayType<T>: AssocArraySize<Size = Self>
-        + AsRef<[T]>
+    type ArrayType<T>: AsRef<[T]>
         + AsMut<[T]>
         + Borrow<[T]>
         + BorrowMut<[T]>
