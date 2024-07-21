@@ -3,6 +3,7 @@
 use crate::Array;
 use core::{
     borrow::{Borrow, BorrowMut},
+    mem::size_of,
     ops::{Index, IndexMut, Range},
 };
 use typenum::Unsigned;
@@ -13,12 +14,12 @@ use typenum::Unsigned;
 /// # Safety
 ///
 /// `ArrayType` MUST be an array with a number of elements exactly equal to
-/// [`Self::Size::USIZE`]. Breaking this requirement will cause undefined behavior.
+/// [`Size::USIZE`](Unsigned::USIZE). Breaking this requirement will cause undefined behavior.
 pub unsafe trait ArraySize: Sized + 'static {
     #[doc(hidden)]
     const __CHECK_INVARIANT: () = {
         let a = <Self::Size as Unsigned>::USIZE;
-        let b = core::mem::size_of::<Self::ArrayType<u8>>();
+        let b = size_of::<Self::ArrayType<u8>>();
         assert!(a == b, "ArraySize invariant violated");
     };
 
