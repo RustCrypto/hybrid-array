@@ -818,6 +818,17 @@ mod extra_sizes {
     pub type U35664 = uint!(0 0 0 0 1 0 1 0 1 1 0 1 0 0 0 1);
     pub type U49856 = uint!(0 0 0 0 0 0 1 1 0 1 0 0 0 0 1 1);
 
+    // Kemeleon ML-KEM Encoding sizes
+    pub type U749 = uint!(0 0 1 0 1 1 1 0 1 1 0 1);
+    pub type U781 = uint!(0 0 1 1 0 0 0 0 1 1 0 1);
+    pub type U877 = uint!(0 0 1 1 0 1 1 0 1 1 0 1);
+    pub type U1124 = uint!(0 1 0 0 0 1 1 0 0 1 0 0);
+    pub type U1156 = uint!(0 1 0 0 1 0 0 0 0 1 0 0);
+    pub type U1252 = uint!(0 1 0 0 1 1 1 0 0 1 0 0);
+    pub type U1498 = uint!(0 1 0 1 1 1 0 1 1 0 1 0);
+    pub type U1530 = uint!(0 1 0 1 1 1 1 1 1 0 1 0);
+    pub type U1626 = uint!(0 1 1 0 0 1 0 1 1 0 1 0);
+
     impl_array_sizes! {
         1040 => U1040,
         1056 => U1056,
@@ -1026,5 +1037,18 @@ mod extra_sizes {
         29792 => U29792,
         35664 => U35664,
         49856 => U49856,
+    }
+
+    // Kemeleon ML-KEM Encoding sizes
+    impl_array_sizes! {
+        749 => U749,
+        781 => U781,
+        877 => U877,
+        1124 => U1124,
+        1156 => U1156,
+        1252 => U1252,
+        1498 => U1498,
+        1530 => U1530,
+        1626 => U1626,
     }
 }
