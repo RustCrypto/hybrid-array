@@ -45,7 +45,7 @@ dual licensed as above, without any additional terms or conditions.
 
 [//]: # (badges)
 
-[crate-image]: https://buildstats.info/crate/hybrid-array
+[crate-image]: https://img.shields.io/crates/v/hybrid-array
 [crate-link]: https://crates.io/crates/hybrid-array
 [docs-image]: https://docs.rs/hybrid-array/badge.svg
 [docs-link]: https://docs.rs/hybrid-array/
