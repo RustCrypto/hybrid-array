@@ -107,7 +107,7 @@ use core::{
     ptr,
     slice::{self, Iter, IterMut},
 };
-use typenum::{Diff, Sum};
+use typenum::{Diff, Sum, Unsigned};
 
 #[cfg(feature = "zeroize")]
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -207,7 +207,7 @@ where
         U: Add<N>,
         Sum<U, N>: ArraySize,
     {
-        self.into_iter().chain(other.into_iter()).collect()
+        self.into_iter().chain(other).collect()
     }
 
     /// Splits `self` at index `N` in two arrays.
@@ -223,7 +223,7 @@ where
         unsafe {
             let array = ManuallyDrop::new(self);
             let head = ptr::read(array.as_ptr().cast());
-            let tail = ptr::read(array.as_ptr().add(N::USIZE).cast());
+            let tail = ptr::read(array.as_ptr().add(<N::Size as Unsigned>::USIZE).cast());
             (head, tail)
         }
     }
@@ -239,7 +239,7 @@ where
         unsafe {
             let array_ptr = self.as_ptr();
             let head = &*array_ptr.cast();
-            let tail = &*array_ptr.add(N::USIZE).cast();
+            let tail = &*array_ptr.add(<N::Size as Unsigned>::USIZE).cast();
             (head, tail)
         }
     }
@@ -255,7 +255,7 @@ where
         unsafe {
             let array_ptr = self.as_mut_ptr();
             let head = &mut *array_ptr.cast();
-            let tail = &mut *array_ptr.add(N::USIZE).cast();
+            let tail = &mut *array_ptr.add(<N::Size as Unsigned>::USIZE).cast();
             (head, tail)
         }
     }
@@ -268,12 +268,16 @@ where
     #[allow(clippy::arithmetic_side_effects)]
     #[inline]
     pub fn slice_as_chunks(buf: &[T]) -> (&[Self], &[T]) {
-        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+        assert_ne!(
+            <U::Size as Unsigned>::USIZE,
+            0,
+            "chunk size must be non-zero"
+        );
         // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
         // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
         // thus overflow on multiplication and underflow on substraction are impossible.
-        let chunks_len = buf.len() / U::USIZE;
-        let tail_pos = U::USIZE * chunks_len;
+        let chunks_len = buf.len() / <U::Size as Unsigned>::USIZE;
+        let tail_pos = <U::Size as Unsigned>::USIZE * chunks_len;
         let tail_len = buf.len() - tail_pos;
         unsafe {
             let ptr = buf.as_ptr();
@@ -291,12 +295,16 @@ where
     #[allow(clippy::arithmetic_side_effects)]
     #[inline]
     pub fn slice_as_chunks_mut(buf: &mut [T]) -> (&mut [Self], &mut [T]) {
-        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+        assert_ne!(
+            <U::Size as Unsigned>::USIZE,
+            0,
+            "chunk size must be non-zero"
+        );
         // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
         // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
         // thus overflow on multiplication and underflow on substraction are impossible.
-        let chunks_len = buf.len() / U::USIZE;
-        let tail_pos = U::USIZE * chunks_len;
+        let chunks_len = buf.len() / <U::Size as Unsigned>::USIZE;
+        let tail_pos = <U::Size as Unsigned>::USIZE * chunks_len;
         let tail_len = buf.len() - tail_pos;
         unsafe {
             let ptr = buf.as_mut_ptr();
@@ -605,6 +613,7 @@ where
 {
     #[inline]
     fn from(arr: [T; N]) -> Array<T, U> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         Array(arr)
     }
 }
@@ -766,7 +775,8 @@ where
 
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Array<T, U>, TryFromSliceError> {
-        <&'a Self>::try_from(slice).map(Clone::clone)
+        core::convert::identity(U::__CHECK_INVARIANT);
+        <&'a Self>::try_from(slice).cloned()
     }
 }
 
@@ -778,6 +788,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Self, TryFromSliceError> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         check_slice_length::<T, U>(slice)?;
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
@@ -794,6 +805,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a mut [T]) -> Result<Self, TryFromSliceError> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         check_slice_length::<T, U>(slice)?;
 
         // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
@@ -825,9 +837,12 @@ where
 /// Generate a [`TryFromSliceError`] if the slice doesn't match the given length.
 #[cfg_attr(debug_assertions, allow(clippy::panic_in_result_fn))]
 fn check_slice_length<T, U: ArraySize>(slice: &[T]) -> Result<(), TryFromSliceError> {
-    debug_assert_eq!(Array::<(), U>::default().len(), U::USIZE);
+    debug_assert_eq!(
+        Array::<(), U>::default().len(),
+        <U::Size as Unsigned>::USIZE
+    );
 
-    if slice.len() != U::USIZE {
+    if slice.len() != <U::Size as Unsigned>::USIZE {
         // Hack: `TryFromSliceError` lacks a public constructor
         <&[T; 1]>::try_from([].as_slice())?;
 

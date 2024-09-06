@@ -3,6 +3,7 @@
 use crate::Array;
 use core::{
     borrow::{Borrow, BorrowMut},
+    mem::size_of,
     ops::{Index, IndexMut, Range},
 };
 use typenum::Unsigned;
@@ -13,17 +14,23 @@ use typenum::Unsigned;
 /// # Safety
 ///
 /// `ArrayType` MUST be an array with a number of elements exactly equal to
-/// [`Unsigned::USIZE`]. Breaking this requirement will cause undefined behavior.
-///
-/// NOTE: This trait is effectively sealed and can not be implemented by third-party crates.
-/// It is implemented only for a number of types defined in [`typenum::consts`].
-pub unsafe trait ArraySize: Unsigned {
+/// [`Size::USIZE`](Unsigned::USIZE). Breaking this requirement will cause undefined behavior.
+pub unsafe trait ArraySize: Sized + 'static {
+    #[doc(hidden)]
+    const __CHECK_INVARIANT: () = {
+        let a = <Self::Size as Unsigned>::USIZE;
+        let b = size_of::<Self::ArrayType<u8>>();
+        assert!(a == b, "ArraySize invariant violated");
+    };
+
+    /// The size underlying the array.
+    type Size: Unsigned;
+
     /// Array type which corresponds to this size.
     ///
     /// This is always defined to be `[T; N]` where `N` is the same as
-    /// [`ArraySize::USIZE`][`typenum::Unsigned::USIZE`].
-    type ArrayType<T>: AssocArraySize<Size = Self>
-        + AsRef<[T]>
+    /// [`ArraySize::Size::USIZE`][`typenum::Unsigned::USIZE`].
+    type ArrayType<T>: AsRef<[T]>
         + AsMut<[T]>
         + Borrow<[T]>
         + BorrowMut<[T]>

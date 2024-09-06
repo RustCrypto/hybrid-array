@@ -24,6 +24,7 @@ where
     ///
     /// Propagates the `E` type returned from the provided `F` in the event of error.
     pub fn try_from_fn<E>(f: impl FnMut(usize) -> Result<T, E>) -> Result<Self, E> {
+        core::convert::identity(U::__CHECK_INVARIANT);
         let mut array = Array::<MaybeUninit<T>, U>::uninit();
         try_from_fn_erased(array.0.as_mut(), f)?;
 

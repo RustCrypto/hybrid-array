@@ -22,6 +22,7 @@ macro_rules! impl_array_sizes {
     ($($len:expr => $ty:ident),+ $(,)?) => {
         $(
             unsafe impl ArraySize for $ty {
+                type Size = $ty;
                 type ArrayType<T> = [T; $len];
             }
 
