@@ -204,7 +204,7 @@ where
         U: Add<N>,
         Sum<U, N>: ArraySize,
     {
-        self.into_iter().chain(other.into_iter()).collect()
+        self.into_iter().chain(other).collect()
     }
 
     /// Splits `self` at index `N` in two arrays.
@@ -763,7 +763,7 @@ where
 
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Array<T, U>, TryFromSliceError> {
-        <&'a Self>::try_from(slice).map(Clone::clone)
+        <&'a Self>::try_from(slice).cloned()
     }
 }
 
