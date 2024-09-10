@@ -21,7 +21,6 @@ typenum = { version = "1.17", features = ["const-generics"] }
 zeroize = { version = "1.8", optional = true, default-features = false }
 
 [features]
-std = []
 extra-sizes = []
 
 [package.metadata.docs.rs]

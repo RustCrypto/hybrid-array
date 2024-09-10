@@ -84,9 +84,6 @@
 //! If you have any questions, please
 //! [start a discussion](https://github.com/RustCrypto/hybrid-array/discussions).
 
-#[cfg(feature = "std")]
-extern crate std;
-
 pub mod sizes;
 
 mod from_fn;
