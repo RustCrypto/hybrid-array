@@ -14,14 +14,13 @@ categories = ["no-std", "data-structures"]
 keywords = ["generic-array"]
 readme = "README.md"
 edition = "2021"
-rust-version = "1.65"
+rust-version = "1.81.0"
 
 [dependencies]
 typenum = { version = "1.17", features = ["const-generics"] }
 zeroize = { version = "1.8", optional = true, default-features = false }
 
 [features]
-std = []
 extra-sizes = []
 
 [package.metadata.docs.rs]
