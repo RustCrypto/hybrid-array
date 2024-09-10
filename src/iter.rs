@@ -18,8 +18,7 @@ impl fmt::Display for TryFromIteratorError {
     }
 }
 
-#[cfg(feature = "std")]
-impl std::error::Error for TryFromIteratorError {}
+impl core::error::Error for TryFromIteratorError {}
 
 impl<T, U> Array<T, U>
 where
