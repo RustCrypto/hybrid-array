@@ -14,7 +14,7 @@ categories = ["no-std", "data-structures"]
 keywords = ["generic-array"]
 readme = "README.md"
 edition = "2021"
-rust-version = "1.81.0"
+rust-version = "1.81"
 
 [dependencies]
 typenum = { version = "1.17", features = ["const-generics"] }
