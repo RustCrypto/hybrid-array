@@ -38,6 +38,7 @@ jobs:
           targets: ${{ matrix.target }}
       - run: cargo build --no-default-features --target ${{ matrix.target }}
       - run: cargo build --no-default-features --target ${{ matrix.target }} --features extra-sizes
+      - run: cargo build --no-default-features --target ${{ matrix.target }} --features serde
 
   careful:
     runs-on: ubuntu-latest
@@ -105,4 +106,5 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
       - run: cargo test
+      - run: cargo test --features serde
       - run: cargo test --all-features

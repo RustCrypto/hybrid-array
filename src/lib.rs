@@ -90,6 +90,9 @@ mod from_fn;
 mod iter;
 mod traits;
 
+#[cfg(feature = "serde")]
+mod serde;
+
 pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
 
