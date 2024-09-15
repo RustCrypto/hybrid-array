@@ -819,15 +819,15 @@ mod extra_sizes {
     pub type U49856 = uint!(0 0 0 0 0 0 1 1 0 1 0 0 0 0 1 1);
 
     // Kemeleon ML-KEM Encoding sizes
-    pub type U749 = uint!(0 0 1 0 1 1 1 0 1 1 0 1);
-    pub type U781 = uint!(0 0 1 1 0 0 0 0 1 1 0 1);
-    pub type U877 = uint!(0 0 1 1 0 1 1 0 1 1 0 1);
-    pub type U1124 = uint!(0 1 0 0 0 1 1 0 0 1 0 0);
-    pub type U1156 = uint!(0 1 0 0 1 0 0 0 0 1 0 0);
-    pub type U1252 = uint!(0 1 0 0 1 1 1 0 0 1 0 0);
-    pub type U1498 = uint!(0 1 0 1 1 1 0 1 1 0 1 0);
-    pub type U1530 = uint!(0 1 0 1 1 1 1 1 1 0 1 0);
-    pub type U1626 = uint!(0 1 1 0 0 1 0 1 1 0 1 0);
+    pub type U749 = uint!(1 0 1 1 0 1 1 1 0 1);
+    pub type U781 = uint!(1 0 1 1 0 0 0 0 1 1);
+    pub type U877 = uint!(1 0 1 1 0 1 1 0 1 1);
+    pub type U1124 = uint!(0 0 1 0 0 1 1 0 0 0 1);
+    pub type U1156 = uint!(0 0 1 0 0 0 0 1 0 0 1);
+    pub type U1252 = uint!(0 0 1 0 0 1 1 1 0 0 1);
+    pub type U1498 = uint!(0 1 0 1 1 0 1 1 1 0 1);
+    pub type U1530 = uint!(0 1 0 1 1 1 1 1 1 0 1);
+    pub type U1658 = uint!(0 1 0 1 1 1 1 0 0 1 1);
 
     impl_array_sizes! {
         1040 => U1040,
@@ -1049,6 +1049,6 @@ mod extra_sizes {
         1252 => U1252,
         1498 => U1498,
         1530 => U1530,
-        1626 => U1626,
+        1658 => U1658,
     }
 }
