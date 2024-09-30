@@ -1,6 +1,6 @@
 [package]
 name = "hybrid-array"
-version = "0.2.0-rc.10"
+version = "0.2.0-rc.11"
 description = """
 Hybrid typenum-based and const generic array types designed to provide the
 flexibility of typenum-based expressions while also allowing interoperability
