@@ -829,6 +829,12 @@ mod extra_sizes {
     pub type U1530 = uint!(0 1 0 1 1 1 1 1 1 0 1);
     pub type U1658 = uint!(0 1 0 1 1 1 1 0 0 1 1);
 
+    // LMS sizes
+    pub type U2047 = uint!(1 1 1 1 1 1 1 1 1 1 1);
+    pub type U2180 = uint!(0 0 1 0 0 0 0 1 0 0 0 1);
+    pub type U4292 = uint!(0 0 1 0 0 0 1 1 0 0 0 0 1);
+    pub type U8516 = uint!(0 0 1 0 0 0 1 0 1 0 0 0 0 1);
+
     impl_array_sizes! {
         1040 => U1040,
         1056 => U1056,
@@ -1050,5 +1056,13 @@ mod extra_sizes {
         1498 => U1498,
         1530 => U1530,
         1658 => U1658,
+    }
+
+    // LMS sizes
+    impl_array_sizes! {
+        2047 => U2047,
+        2180 => U2180,
+        4292 => U4292,
+        8516 => U8516,
     }
 }
