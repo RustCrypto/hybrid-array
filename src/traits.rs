@@ -36,7 +36,22 @@ pub unsafe trait ArraySize: Unsigned {
         + IntoIterator<Item = T>;
 }
 
-/// Associates an [`ArraySize`] with a given type.
+/// Associates an [`ArraySize`] with a given type. Can be used to write APIs which use `[T; N]`
+/// and convert to [`Array`] internally.
+///
+/// # Example
+///
+/// ```
+/// use hybrid_array::{ArrayN, AssocArraySize};
+///
+/// pub fn example<const N: usize>(bytes: &[u8; N])
+/// where
+///     [u8; N]: AssocArraySize + AsRef<ArrayN<u8, N>>
+/// {
+///     // _arrayn is ArrayN<u8, N>
+///     let _arrayn = bytes.as_ref();
+/// }
+/// ```
 pub trait AssocArraySize: Sized {
     /// Size of an array type, expressed as a [`typenum`]-based [`ArraySize`].
     type Size: ArraySize;
