@@ -20,6 +20,7 @@ rust-version = "1.81"
 typenum = { version = "1.17", features = ["const-generics"] }
 
 # optional dependencies
+bytemuck = { version = "1", optional = true, default-features = false }
 serde = { version = "1", optional = true, default-features = false }
 zeroize = { version = "1.8", optional = true, default-features = false }
 

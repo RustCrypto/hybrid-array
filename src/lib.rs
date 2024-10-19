@@ -29,6 +29,14 @@
     unused_qualifications
 )]
 
+//! ## Features
+//!
+//! This crate exposes the following feature flags. The default is NO features.
+//!
+//! - `bytemuck`: impls the `Pod` and `Zeroable` traits
+//! - `serde`: impls the `Deserialize` and `Serialize` traits for `Array`
+//! - `zeroize`: impls [`Zeroize`](https://docs.rs/zeroize/latest/zeroize/trait.Zeroize.html) for `Array<T: Zeroize, U>`
+//!
 //! ## Usage
 //!
 //! The two core types in this crate are as follows:
@@ -122,6 +130,9 @@ use core::{
     slice::{self, Iter, IterMut},
 };
 use typenum::{Diff, Sum};
+
+#[cfg(feature = "bytemuck")]
+use bytemuck::{Pod, Zeroable};
 
 #[cfg(feature = "zeroize")]
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -814,6 +825,23 @@ where
         // array with length checked above.
         Ok(unsafe { &mut *slice.as_mut_ptr().cast() })
     }
+}
+
+#[cfg(feature = "bytemuck")]
+unsafe impl<T, U> Pod for Array<T, U>
+where
+    T: Pod,
+    U: ArraySize,
+    U::ArrayType<T>: Copy,
+{
+}
+
+#[cfg(feature = "bytemuck")]
+unsafe impl<T, U> Zeroable for Array<T, U>
+where
+    T: Zeroable,
+    U: ArraySize,
+{
 }
 
 #[cfg(feature = "zeroize")]
