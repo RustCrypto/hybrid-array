@@ -93,7 +93,7 @@
 //! `generic-array`, albeit with a public inner array type and significantly less
 //! `unsafe` code.
 //!
-//! Migrating should hopefully be relatively painless with the following
+//! The bulk of the migration work can be accomplished by making the following find/replace-style
 //! substitutions in your `.rs` files:
 //!
 //! - Replace `generic_array` with `hybrid_array`
