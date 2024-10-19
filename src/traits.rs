@@ -36,8 +36,10 @@ pub unsafe trait ArraySize: Unsigned {
         + IntoIterator<Item = T>;
 }
 
-/// Associates an [`ArraySize`] with a given type. Can be used to write APIs which use `[T; N]`
-/// and convert to [`Array`] internally.
+/// Associates an [`ArraySize`] with a given type. Can be used to accept `[T; N]` const generic
+/// arguments and convert to [`Array`] internally.
+///
+/// This trait is also the magic glue that makes the [`ArrayN`][`crate::ArrayN`] type alias work.
 ///
 /// # Example
 ///
