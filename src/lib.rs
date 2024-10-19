@@ -47,6 +47,20 @@
 //! let arr: Array<u8, U4> = Array([1, 2, 3, 4]);
 //! ```
 //!
+//! ### About [`typenum`]
+//!
+//! The [`typenum`] crate provides a type-level implementation of numbers and arithmetic operations.
+//!
+//! While [`typenum`] can be used to express arbitrary integers using the type system, the
+//! `hybrid-array` crate is limited to the array sizes in the [`sizes`] module, which have
+//! names like [`U0`][`sizes::U0`], [`U1`][`sizes::U1`], [`U2`][`sizes::U2`], [`U3`][`sizes::U3`],
+//! etc. All supported sizes will have an impl of [`ArraySize`], which is the trait providing
+//! linkage between [`typenum`]-based types and core arrays / const generics.
+//!
+//! [`ArraySize`] bounds on the [`typenum::Unsigned`] trait, which can be used to obtain integer
+//! sizes of arrays via associated constants. For example, to obtain the size of an `ArraySize` as
+//! a `usize`, use the associated [`typenum::Unsigned::USIZE`] constant.
+//!
 //! ## Relationship with `generic-array`
 //!
 //! `hybrid-array` is directly inspired by the [`generic-array`] crate.
