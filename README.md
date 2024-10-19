@@ -26,14 +26,15 @@ it possible to convert between const generic types and `typenum` types.
 
 This crate exposes the following feature flags. The default is NO features.
 
-* `zeroize` - Implements [`Zeroize`](https://docs.rs/zeroize/latest/zeroize/trait.Zeroize.html) for `Array<T: Zeroize, U>`
+- `serde`: implements the `Deserialize` and `Serialize` traits for `Array`
+- `zeroize`: implements [`Zeroize`](https://docs.rs/zeroize/latest/zeroize/trait.Zeroize.html) for `Array<T: Zeroize, U>`
 
 ## License
 
 Licensed under either of:
 
- * [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
- * [MIT license](http://opensource.org/licenses/MIT)
+- [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+- [MIT license](http://opensource.org/licenses/MIT)
 
 at your option.
 
