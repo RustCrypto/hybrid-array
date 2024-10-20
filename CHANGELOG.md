@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0 (2024-10-18)
+## 0.2.1 (2024-10-20)
+### Fixed
+- MSRV badge ([9d47c798](https://github.com/RustCrypto/hybrid-array/commit/9d47c79861057b3a04bb19cb2dfaa1f75cbf9ddd))
+
+## 0.2.0 (2024-10-19)
 ### Added
 - Reference conversion support from core arrays ([utils#904])
 - Impl `Default` for `Array` ([utils#905])
