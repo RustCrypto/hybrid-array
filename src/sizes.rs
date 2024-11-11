@@ -835,6 +835,25 @@ mod extra_sizes {
     pub type U4292 = uint!(0 0 1 0 0 0 1 1 0 0 0 0 1);
     pub type U8516 = uint!(0 0 1 0 0 0 1 0 1 0 0 0 0 1);
 
+    // FrodoKEM640 sizes
+
+    pub type U9616 = uint!(0 0 0 0 1 0 0 1 1 0 1 0 0 1);
+    pub type U19888 = uint!(0 0 0 0 1 1 0 1 1 0 1 1 0 0 1);
+    pub type U9720 = uint!(0 0 0 1 1 1 1 1 1 0 1 0 0 1);
+    pub type U9752 = uint!(0 0 0 1 1 0 0 0 0 1 1 0 0 1);
+
+    // FrodoKEM976 sizes
+    pub type U15632 = uint!(0 0 0 0 1 0 0 0 1 0 1 1 1 1);
+    pub type U31296 = uint!(0 0 0 0 0 0 1 0 0 1 0 1 1 1 1);
+    pub type U15744 = uint!(0 0 0 0 0 0 0 1 1 0 1 1 1 1);
+    pub type U15792 = uint!(0 0 0 0 1 1 0 1 1 0 1 1 1 1);
+
+    // FrodoKEM1344 sizes
+    pub type U21520 = uint!(0 0 0 0 1 0 0 0 0 0 1 0 1 0 1);
+    pub type U43088 = uint!(0 0 0 0 1 0 1 0 0 0 0 1 0 1 0 1);
+    pub type U21632 = uint!(0 0 0 0 0 0 0 1 0 0 1 0 1 0 1);
+    pub type U21696 = uint!(0 0 0 0 0 0 1 1 0 0 1 0 1 0 1);
+
     impl_array_sizes! {
         1040 => U1040,
         1056 => U1056,
@@ -1064,5 +1083,21 @@ mod extra_sizes {
         2180 => U2180,
         4292 => U4292,
         8516 => U8516,
+    }
+
+    // Frodo sizes
+    impl_array_sizes! {
+        9616 => U9616,
+        19888 => U19888,
+        9720 => U9720,
+        9752 => U9752,
+        15632 => U15632,
+        31296 => U31296,
+        15744 => U15744,
+        15792 => U15792,
+        21520 => U21520,
+        43088 => U43088,
+        21632 => U21632,
+        21696 => U21696,
     }
 }
