@@ -806,9 +806,16 @@ mod extra_sizes {
     pub type U4080 = uint!(0 0 0 0 1 1 1 1 1 1 1 1);
 
     // ML-DSA sizes
+    //
+    // Includes the public key, private key, and signature sizes not covered elsewhere, as well as
+    // some intermediate value sizes.
     pub type U2420 = uint!(0 0 1 0 1 1 1 0 1 0 0 1);
-    pub type U3293 = uint!(1 0 1 1 1 0 1 1 0 0 1 1);
+    pub type U3309 = uint!(1 0 1 1 0 1 1 1 0 0 1 1);
+    pub type U4480 = uint!(0 0 0 0 0 0 0 1 1 0 0 0 1);
+    pub type U4544 = uint!(0 0 0 0 0 0 1 1 1 0 0 0 1);
     pub type U4595 = uint!(1 1 0 0 1 1 1 1 1 0 0 0 1);
+    pub type U4627 = uint!(1 1 0 0 1 0 0 0 0 1 0 0 1);
+    pub type U4896 = uint!(0 0 0 0 0 1 0 0 1 1 0 0 1);
 
     // SLH-DSA sizes
     pub type U7856 = uint!(0 0 0 0 1 1 0 1 0 1 1 1 1);
@@ -1050,8 +1057,12 @@ mod extra_sizes {
     // ML-DSA sizes
     impl_array_sizes! {
         2420 => U2420,
-        3293 => U3293,
+        3309 => U3309,
+        4480 => U4480,
+        4544 => U4544,
         4595 => U4595,
+        4627 => U4627,
+        4896 => U4896,
     }
 
     // SLH-DSA sizes
