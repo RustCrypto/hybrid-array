@@ -809,7 +809,11 @@ mod extra_sizes {
     //
     // Includes the public key, private key, and signature sizes not covered elsewhere, as well as
     // some intermediate value sizes.
+    //
+    // U3293 is not required for ML-DSA, but was included in an early iteration of this section
+    // (before the `ml_dsa` crate was created).  So it is included here for backward compatibility.
     pub type U2420 = uint!(0 0 1 0 1 1 1 0 1 0 0 1);
+    pub type U3293 = uint!(1 0 1 1 1 0 1 1 0 0 1 1);
     pub type U3309 = uint!(1 0 1 1 0 1 1 1 0 0 1 1);
     pub type U4480 = uint!(0 0 0 0 0 0 0 1 1 0 0 0 1);
     pub type U4544 = uint!(0 0 0 0 0 0 1 1 1 0 0 0 1);
@@ -1057,6 +1061,7 @@ mod extra_sizes {
     // ML-DSA sizes
     impl_array_sizes! {
         2420 => U2420,
+        3293 => U3293,
         3309 => U3309,
         4480 => U4480,
         4544 => U4544,
