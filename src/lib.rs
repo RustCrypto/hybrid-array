@@ -226,6 +226,7 @@ where
 
     /// Concatenates `self` with `other`.
     #[inline]
+    #[allow(clippy::arithmetic_side_effects, reason = "`i` will never overflow")]
     pub fn concat<N>(self, other: Array<T, N>) -> Array<T, Sum<U, N>>
     where
         N: ArraySize,
