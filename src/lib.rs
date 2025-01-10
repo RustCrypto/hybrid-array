@@ -226,13 +226,25 @@ where
 
     /// Concatenates `self` with `other`.
     #[inline]
+    #[allow(clippy::arithmetic_side_effects, reason = "`i` will never overflow")]
     pub fn concat<N>(self, other: Array<T, N>) -> Array<T, Sum<U, N>>
     where
         N: ArraySize,
         U: Add<N>,
         Sum<U, N>: ArraySize,
     {
-        self.into_iter().chain(other).collect()
+        let mut c = Array::uninit();
+        let mut i = 0;
+        for v in self {
+            c[i].write(v);
+            i += 1;
+        }
+        for v in other {
+            c[i].write(v);
+            i += 1;
+        }
+        // SAFETY: We wrote to every element of `c`.
+        unsafe { c.assume_init() }
     }
 
     /// Splits `self` at index `N` in two arrays.
