@@ -226,7 +226,6 @@ where
 
     /// Concatenates `self` with `other`.
     #[inline]
-    #[allow(clippy::arithmetic_side_effects, reason = "`i` will never overflow")]
     pub fn concat<N>(self, other: Array<T, N>) -> Array<T, Sum<U, N>>
     where
         N: ArraySize,
@@ -234,14 +233,12 @@ where
         Sum<U, N>: ArraySize,
     {
         let mut c = Array::uninit();
-        let mut i = 0;
-        for v in self {
-            c[i].write(v);
-            i += 1;
+        let (left, right) = c.split_at_mut(self.len());
+        for (val, dst) in self.into_iter().zip(left) {
+            dst.write(val);
         }
-        for v in other {
-            c[i].write(v);
-            i += 1;
+        for (val, dst) in other.into_iter().zip(right) {
+            dst.write(val);
         }
         // SAFETY: We wrote to every element of `c`.
         unsafe { c.assume_init() }
