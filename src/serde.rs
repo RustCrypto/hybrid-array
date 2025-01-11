@@ -71,6 +71,7 @@ where
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     const INTEGER_ARRAY_EXAMPLE: [u64; 4] = [1, 2, 3, 4];
     use crate::{
