@@ -601,8 +601,8 @@ impl_array_sizes_with_import! {
 mod extra_sizes {
     use super::{ArraySize, AssocArraySize};
     use typenum::{
-        consts::{B0, B1},
         UInt, UTerm,
+        consts::{B0, B1},
     };
 
     // This macro constructs a UInt type from a sequence of bits.  The bits are interpreted as the
