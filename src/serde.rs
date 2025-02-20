@@ -75,8 +75,8 @@ where
 mod tests {
     const INTEGER_ARRAY_EXAMPLE: [u64; 4] = [1, 2, 3, 4];
     use crate::{
-        sizes::{U4, U5},
         Array,
+        sizes::{U4, U5},
     };
 
     #[test]

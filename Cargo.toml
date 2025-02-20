@@ -1,6 +1,6 @@
 [package]
 name = "hybrid-array"
-version = "0.2.3"
+version = "0.3.0-pre"
 description = """
 Hybrid typenum-based and const generic array types designed to provide the
 flexibility of typenum-based expressions while also allowing interoperability
@@ -13,8 +13,8 @@ repository = "https://github.com/RustCrypto/hybrid-array"
 categories = ["no-std", "data-structures"]
 keywords = ["generic-array"]
 readme = "README.md"
-edition = "2021"
-rust-version = "1.81"
+edition = "2024"
+rust-version = "1.85"
 
 [dependencies]
 typenum = { version = "1.17", features = ["const-generics"] }
