@@ -19,7 +19,7 @@ checksum = "8b37c88a63ffd85d15b406896cc343916d7cf57838a847b3a6f2ca5d39a5695a"
 
 [[package]]
 name = "hybrid-array"
-version = "0.3.0-pre"
+version = "0.3.0"
 dependencies = [
  "bincode",
  "bytemuck",
