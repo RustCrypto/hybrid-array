@@ -43,8 +43,8 @@ dual licensed as above, without any additional terms or conditions.
 [crate-link]: https://crates.io/crates/hybrid-array
 [docs-image]: https://docs.rs/hybrid-array/badge.svg
 [docs-link]: https://docs.rs/hybrid-array/
-[build-image]: https://github.com/RustCrypto/utils/workflows/hybrid-array/badge.svg
-[build-link]: https://github.com/RustCrypto/utils/actions/workflows/hybrid-array.yml
+[build-image]: https://github.com/RustCrypto/hybrid-array/actions/workflows/hybrid-array.yml/badge.svg?branch=master
+[build-link]: https://github.com/RustCrypto/hybrid-array/actions/workflows/hybrid-array.yml?query=branch:master
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [rustc-image]: https://img.shields.io/badge/rustc-1.85+-blue.svg
 [chat-image]: https://img.shields.io/badge/zulip-join_chat-blue.svg
