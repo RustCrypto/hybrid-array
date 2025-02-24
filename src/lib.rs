@@ -22,7 +22,6 @@
     clippy::unwrap_used,
     missing_docs,
     missing_debug_implementations,
-    rust_2018_idioms,
     trivial_casts,
     trivial_numeric_casts,
     unused_lifetimes,
