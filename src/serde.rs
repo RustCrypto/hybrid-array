@@ -78,19 +78,27 @@ mod tests {
         Array,
         sizes::{U4, U5},
     };
+    use bincode::{
+        config,
+        error::DecodeError,
+        serde::{decode_from_slice, encode_to_vec},
+    };
 
     #[test]
     fn deserialize_integer_array() {
-        let serialized = bincode::serialize(&INTEGER_ARRAY_EXAMPLE).unwrap();
-        let deserialized: Array<u64, U4> = bincode::deserialize(&serialized).unwrap();
+        let serialized = encode_to_vec(INTEGER_ARRAY_EXAMPLE, config::standard()).unwrap();
+        let (deserialized, len): (Array<u64, U4>, usize) =
+            decode_from_slice(&serialized, config::standard()).unwrap();
+
         assert_eq!(deserialized, INTEGER_ARRAY_EXAMPLE);
+        assert_eq!(len, serialized.len());
     }
 
     #[test]
     fn deserialize_too_short() {
-        let serialized = bincode::serialize(&INTEGER_ARRAY_EXAMPLE).unwrap();
-        let deserialized: Result<Array<u64, U5>, bincode::Error> =
-            bincode::deserialize(&serialized);
+        let serialized = encode_to_vec(INTEGER_ARRAY_EXAMPLE, config::standard()).unwrap();
+        let deserialized: Result<(Array<u8, U5>, usize), DecodeError> =
+            decode_from_slice(&serialized, config::standard());
 
         // TODO(tarcieri): check for more specific error type
         assert!(deserialized.is_err())
@@ -99,8 +107,11 @@ mod tests {
     #[test]
     fn serialize_integer_array() {
         let example: Array<u64, U4> = Array(INTEGER_ARRAY_EXAMPLE);
-        let serialized = bincode::serialize(&example).unwrap();
-        let deserialized: Array<u64, U4> = bincode::deserialize(&serialized).unwrap();
+        let serialized = encode_to_vec(example, config::standard()).unwrap();
+        let (deserialized, len): (Array<u64, U4>, usize) =
+            decode_from_slice(&serialized, config::standard()).unwrap();
+
         assert_eq!(example, deserialized);
+        assert_eq!(len, serialized.len());
     }
 }
