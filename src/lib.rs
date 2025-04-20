@@ -133,6 +133,9 @@ use typenum::{Diff, Sum};
 #[cfg(feature = "bytemuck")]
 use bytemuck::{Pod, Zeroable};
 
+#[cfg(feature = "subtle")]
+use subtle::{Choice, ConditionallySelectable, ConstantTimeEq};
+
 #[cfg(feature = "zeroize")]
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
@@ -852,6 +855,41 @@ where
     T: Zeroable,
     U: ArraySize,
 {
+}
+
+#[cfg(feature = "subtle")]
+impl<T, U> ConditionallySelectable for Array<T, U>
+where
+    Self: Copy,
+    T: ConditionallySelectable,
+    U: ArraySize,
+{
+    #[inline]
+    fn conditional_select(a: &Self, b: &Self, choice: Choice) -> Self {
+        let mut output = *a;
+        output.conditional_assign(b, choice);
+        output
+    }
+
+    fn conditional_assign(&mut self, other: &Self, choice: Choice) {
+        for (a_i, b_i) in self.iter_mut().zip(other) {
+            a_i.conditional_assign(b_i, choice)
+        }
+    }
+}
+
+#[cfg(feature = "subtle")]
+impl<T, U> ConstantTimeEq for Array<T, U>
+where
+    T: ConstantTimeEq,
+    U: ArraySize,
+{
+    #[inline]
+    fn ct_eq(&self, other: &Self) -> Choice {
+        self.iter()
+            .zip(other.iter())
+            .fold(Choice::from(1), |acc, (a, b)| acc & a.ct_eq(b))
+    }
 }
 
 #[cfg(feature = "zeroize")]
