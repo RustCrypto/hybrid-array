@@ -40,6 +40,7 @@ jobs:
       - run: cargo build --no-default-features --target ${{ matrix.target }} --features bytemuck
       - run: cargo build --no-default-features --target ${{ matrix.target }} --features extra-sizes
       - run: cargo build --no-default-features --target ${{ matrix.target }} --features serde
+      - run: cargo build --no-default-features --target ${{ matrix.target }} --features subtle
       - run: cargo build --no-default-features --target ${{ matrix.target }} --features zeroize
       - run: cargo build --no-default-features --target ${{ matrix.target }} --all-features
 
