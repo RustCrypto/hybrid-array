@@ -466,12 +466,12 @@ where
 }
 
 #[inline]
-fn array_ref_as_hybrid_array_ref<T, U, const N: usize>(array: &[T; N]) -> &Array<T, U>
+fn array_ref_as_hybrid_array_ref<T, U, const N: usize>(array_ref: &[T; N]) -> &Array<T, U>
 where
     U: ArraySize<ArrayType<T> = [T; N]>,
 {
     // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-    unsafe { &*array.as_ptr().cast() }
+    unsafe { &*array_ref.as_ptr().cast() }
 }
 
 impl<T, U> AsMut<[T]> for Array<T, U>
@@ -494,15 +494,15 @@ where
     }
 }
 
-impl<T, U, const N: usize> AsMut<Array<T, U>> for [T; N]
+#[inline]
+fn array_mut_ref_as_hybrid_array_mut_ref<T, U, const N: usize>(
+    array_ref: &mut [T; N],
+) -> &mut Array<T, U>
 where
     U: ArraySize<ArrayType<T> = [T; N]>,
 {
-    #[inline]
-    fn as_mut(&mut self) -> &mut Array<T, U> {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-        unsafe { &mut *self.as_mut_ptr().cast() }
-    }
+    // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
+    unsafe { &mut *array_ref.as_mut_ptr().cast() }
 }
 
 impl<T, U> Borrow<[T]> for Array<T, U>
@@ -660,7 +660,7 @@ where
 {
     #[inline]
     fn from(array_ref: &'a mut [T; N]) -> &'a mut Array<T, U> {
-        array_ref.as_mut()
+        array_mut_ref_as_hybrid_array_mut_ref(array_ref)
     }
 }
 
