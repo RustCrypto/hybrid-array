@@ -29,6 +29,7 @@ zeroize = { version = "1.8", optional = true, default-features = false }
 bincode = { version = "2", features = ["serde"] }
 
 [features]
+alloc = []
 extra-sizes = []
 
 [package.metadata.docs.rs]
