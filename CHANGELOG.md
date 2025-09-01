@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.0 (2025-09-01)
+### Added
+- `ArraySize` impls for `U536` and `U568` ([#128])
+- `AsArrayRef`/`AsArrayMut` traits with impls on `[T; N]` and `Array` ([#135])
+- `alloc` feature with `Box`/`Vec` conversions to/from `Array` ([#136], [#138])
+
+### Removed
+- `AsRef`/`AsMut` impls on `[T; N]` ([#133])
+
+[#128]: https://github.com/RustCrypto/hybrid-array/pull/128
+[#133]: https://github.com/RustCrypto/hybrid-array/pull/133
+[#135]: https://github.com/RustCrypto/hybrid-array/pull/135
+[#136]: https://github.com/RustCrypto/hybrid-array/pull/136
+[#138]: https://github.com/RustCrypto/hybrid-array/pull/138
+
 ## 0.3.1 (2025-03-30)
 ### Added
 - `subtle` feature ([#126])
