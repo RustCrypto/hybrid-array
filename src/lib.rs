@@ -168,41 +168,6 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 ///
 /// let arr: Array<u8, U3> = Array([1, 2, 3]);
 /// ```
-///
-/// ## [`Borrow`] impls
-///
-/// The [`Array`] type has impls of the [`Borrow`] trait from `core` for both `[T]` and `[T; N]`,
-/// which should make it usable anywhere with e.g. `Borrow<[T]>` bounds.
-///
-/// ### `Borrow<Array<T, U>>` for `[T; N]`
-///
-/// This crate provides a `Borrow` impl for `[T; N]` which makes it possible to write APIs in terms
-/// of `[T; N]` rather than `Array`, so the caller doesn't need to import `Array` at all:
-///
-/// ```
-/// use std::borrow::Borrow;
-/// use hybrid_array::{Array, ArraySize, AssocArraySize, ArrayN, sizes::U3};
-///
-/// pub fn getn_hybrid<T, U: ArraySize>(arr: &Array<T, U>, n: usize) -> &T {
-///     &arr[2]
-/// }
-///
-/// pub fn getn_generic<T, const N: usize>(arr: &[T; N], n: usize) -> &T
-/// where
-///     [T; N]: AssocArraySize + Borrow<ArrayN<T, N>>
-/// {
-///     getn_hybrid(arr.borrow(), n)
-/// }
-///
-/// let array = [0u8, 1, 2, 3];
-/// let x = getn_generic(&array, 2);
-/// assert_eq!(x, &2);
-/// ```
-///
-/// Note that the [`AssocArraySize`] trait can be used to determine the appropriate
-/// [`Array`] size for a given `[T; N]`, and the [`ArrayN`] trait (which internally uses
-/// [`AssocArraySize`]) can be used to determine the specific [`Array`] type for a given
-/// const generic size.
 #[repr(transparent)]
 pub struct Array<T, U: ArraySize>(pub U::ArrayType<T>);
 
@@ -537,16 +502,6 @@ where
     }
 }
 
-impl<T, U> BorrowMut<[T]> for Array<T, U>
-where
-    U: ArraySize,
-{
-    #[inline]
-    fn borrow_mut(&mut self) -> &mut [T] {
-        self.0.as_mut()
-    }
-}
-
 impl<T, U, const N: usize> Borrow<[T; N]> for Array<T, U>
 where
     U: ArraySize<ArrayType<T> = [T; N]>,
@@ -557,6 +512,16 @@ where
     }
 }
 
+impl<T, U> BorrowMut<[T]> for Array<T, U>
+where
+    U: ArraySize,
+{
+    #[inline]
+    fn borrow_mut(&mut self) -> &mut [T] {
+        self.0.as_mut()
+    }
+}
+
 impl<T, U, const N: usize> BorrowMut<[T; N]> for Array<T, U>
 where
     U: ArraySize<ArrayType<T> = [T; N]>,
@@ -564,26 +529,6 @@ where
     #[inline]
     fn borrow_mut(&mut self) -> &mut [T; N] {
         &mut self.0
-    }
-}
-
-impl<T, U, const N: usize> Borrow<Array<T, U>> for [T; N]
-where
-    U: ArraySize<ArrayType<T> = [T; N]>,
-{
-    #[inline]
-    fn borrow(&self) -> &Array<T, U> {
-        self.into()
-    }
-}
-
-impl<T, U, const N: usize> BorrowMut<Array<T, U>> for [T; N]
-where
-    U: ArraySize<ArrayType<T> = [T; N]>,
-{
-    #[inline]
-    fn borrow_mut(&mut self) -> &mut Array<T, U> {
-        self.into()
     }
 }
 
