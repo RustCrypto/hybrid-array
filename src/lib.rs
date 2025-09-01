@@ -68,6 +68,18 @@
 //! sizes of arrays via associated constants. For example, to obtain the size of an `ArraySize` as
 //! a `usize`, use the associated [`typenum::Unsigned::USIZE`] constant.
 //!
+//! ### [`AsArrayRef`] and [`AsArrayMut`] traits
+//!
+//! These traits simplify obtaining references to [`Array`] and are impl'd for both [`Array`]
+//! and `[T; N]`. They're analogous to traits like [`AsRef`] and [`AsMut`].
+//!
+//! They make it possible to write code which uses `[T; N]` or `&[T; N]` in the external facing
+//! API which can obtain references to `&Array` and call other functions which accept such
+//! references, without the caller having to use `Array` in their code and while still supporting
+//! generic sizes.
+//!
+//! For more information and a code example, see [`AsArrayRef`].
+//!
 //! ## Relationship with `generic-array`
 //!
 //! `hybrid-array` is directly inspired by the [`generic-array`] crate.
@@ -75,8 +87,8 @@
 //! However, where `generic-array` predates const generics and uses a core which is built
 //! on `unsafe` code, `hybrid-array`'s core implementation is built on safe code and const
 //! generic implementations. This allows the inner `[T; N]` field of an `Array` to be `pub` as
-//! noted above, and in general for the implementation to be significantly simpler and
-//! easier-to-audit.
+//! noted above, and in general for the implementation to be significantly simpler, easier-to-audit,
+//! and with significantly less use of `unsafe`.
 //!
 //! The only places `hybrid-array` uses unsafe are where it is absolutely necessary, primarily
 //! for reference conversions between `Array<T, U>` and `[T; N]`, and also to provide features
