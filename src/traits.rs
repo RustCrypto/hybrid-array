@@ -65,3 +65,82 @@ where
 {
     type Size = U;
 }
+
+/// Obtain an `&Array` reference for a given type.
+///
+/// This provides functionality equivalent to `AsRef<Array>` or `Borrow<Array>`, but is deliberately
+/// implemented as its own trait both so it can leverage [`AssocArraySize`] to determine the
+/// array size, and also to avoid inference problems that occur when third party impls of traits
+/// like [`AsRef`] and [`Borrow`] are added to `[T; N]`.
+///
+/// # Usage with `[T; N]`
+///
+/// ```
+/// use hybrid_array::{Array, ArraySize, AsArrayRef};
+///
+/// pub fn getn_hybrid<T, U: ArraySize>(arr: &Array<T, U>, n: usize) -> &T {
+///     &arr[2]
+/// }
+///
+/// pub fn getn_generic<T, const N: usize>(arr: &[T; N], n: usize) -> &T
+/// where
+///     [T; N]: AsArrayRef<T>
+/// {
+///     getn_hybrid(arr.as_array_ref(), n)
+/// }
+///
+/// let array = [0u8, 1, 2, 3];
+/// let x = getn_generic(&array, 2);
+/// assert_eq!(x, &2);
+/// ```
+pub trait AsArrayRef<T>: AssocArraySize {
+    /// Converts this type into an immutable [`Array`] reference.
+    fn as_array_ref(&self) -> &Array<T, Self::Size>;
+}
+
+/// Obtain a `&mut Array` reference for a given type.
+///
+/// Companion trait to [`AsArrayRef`] for mutable references, equivalent to [`AsMut`] or
+/// [`BorrowMut`].
+pub trait AsArrayMut<T>: AsArrayRef<T> {
+    /// Converts this type into a mutable [`Array`] reference.
+    fn as_array_mut(&mut self) -> &mut Array<T, Self::Size>;
+}
+
+impl<T, U> AsArrayRef<T> for Array<T, U>
+where
+    U: ArraySize,
+{
+    fn as_array_ref(&self) -> &Self {
+        self
+    }
+}
+
+impl<T, U> AsArrayMut<T> for Array<T, U>
+where
+    U: ArraySize,
+{
+    fn as_array_mut(&mut self) -> &mut Self {
+        self
+    }
+}
+
+impl<T, U, const N: usize> AsArrayRef<T> for [T; N]
+where
+    Self: AssocArraySize<Size = U>,
+    U: ArraySize<ArrayType<T> = Self>,
+{
+    fn as_array_ref(&self) -> &Array<T, U> {
+        self.into()
+    }
+}
+
+impl<T, U, const N: usize> AsArrayMut<T> for [T; N]
+where
+    Self: AssocArraySize<Size = U>,
+    U: ArraySize<ArrayType<T> = Self>,
+{
+    fn as_array_mut(&mut self) -> &mut Array<T, U> {
+        self.into()
+    }
+}
