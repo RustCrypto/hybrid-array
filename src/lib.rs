@@ -666,6 +666,52 @@ where
     }
 }
 
+#[cfg(feature = "alloc")]
+impl<T, U> From<Array<T, U>> for alloc::boxed::Box<[T]>
+where
+    U: ArraySize,
+{
+    #[inline]
+    fn from(array: Array<T, U>) -> alloc::boxed::Box<[T]> {
+        array.into_iter().collect()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T, U> From<&Array<T, U>> for alloc::boxed::Box<[T]>
+where
+    T: Clone,
+    U: ArraySize,
+{
+    #[inline]
+    fn from(array: &Array<T, U>) -> alloc::boxed::Box<[T]> {
+        array.as_slice().into()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T, U> From<Array<T, U>> for alloc::vec::Vec<T>
+where
+    U: ArraySize,
+{
+    #[inline]
+    fn from(array: Array<T, U>) -> alloc::vec::Vec<T> {
+        array.into_iter().collect()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T, U> From<&Array<T, U>> for alloc::vec::Vec<T>
+where
+    T: Clone,
+    U: ArraySize,
+{
+    #[inline]
+    fn from(array: &Array<T, U>) -> alloc::vec::Vec<T> {
+        array.as_slice().into()
+    }
+}
+
 impl<T, U> Hash for Array<T, U>
 where
     T: Hash,
