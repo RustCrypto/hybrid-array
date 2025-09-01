@@ -673,7 +673,7 @@ where
 {
     #[inline]
     fn from(array: Array<T, U>) -> alloc::boxed::Box<[T]> {
-        alloc::vec::Vec::from(array).into_boxed_slice()
+        array.into_iter().collect()
     }
 }
 
