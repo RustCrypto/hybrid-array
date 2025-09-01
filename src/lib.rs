@@ -117,6 +117,9 @@
 //! If you have any questions, please
 //! [start a discussion](https://github.com/RustCrypto/hybrid-array/discussions).
 
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
 pub mod sizes;
 
 mod from_fn;
@@ -826,6 +829,62 @@ where
     #[inline]
     fn try_from(slice: &'a [T]) -> Result<Array<T, U>, TryFromSliceError> {
         <&'a Self>::try_from(slice).cloned()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T, U> TryFrom<alloc::boxed::Box<[T]>> for Array<T, U>
+where
+    Self: Clone,
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(b: alloc::boxed::Box<[T]>) -> Result<Self, TryFromSliceError> {
+        Self::try_from(&*b)
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<'a, T, U> TryFrom<&'a alloc::boxed::Box<[T]>> for Array<T, U>
+where
+    Self: Clone,
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(b: &'a alloc::boxed::Box<[T]>) -> Result<Self, TryFromSliceError> {
+        Self::try_from(&**b)
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T, U> TryFrom<alloc::vec::Vec<T>> for Array<T, U>
+where
+    Self: Clone,
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(v: alloc::vec::Vec<T>) -> Result<Self, TryFromSliceError> {
+        Self::try_from(v.as_slice())
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<'a, T, U> TryFrom<&'a alloc::vec::Vec<T>> for Array<T, U>
+where
+    Self: Clone,
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(v: &'a alloc::vec::Vec<T>) -> Result<Self, TryFromSliceError> {
+        Self::try_from(v.as_slice())
     }
 }
 
