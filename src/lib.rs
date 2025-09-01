@@ -156,32 +156,6 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 ///
 /// let arr: Array<u8, U3> = Array([1, 2, 3]);
 /// ```
-///
-/// ## [`AsRef`] impls
-///
-/// The [`AsRef`] trait can be used to convert from `&Array<T, U>` to `&[T; N]` and vice versa:
-///
-/// ```
-/// use hybrid_array::{Array, ArraySize, AssocArraySize, ArrayN, sizes::U3};
-///
-/// pub fn get_third_item_hybrid_array<T, U: ArraySize>(arr_ref: &Array<T, U>) -> &T {
-///     &arr_ref[2]
-/// }
-///
-/// pub fn get_third_item_const_generic<T, const N: usize>(arr_ref: &[T; N]) -> &T
-/// where
-///     [T; N]: AssocArraySize + AsRef<ArrayN<T, N>>
-/// {
-///     get_third_item_hybrid_array(arr_ref.as_ref())
-/// }
-///
-/// assert_eq!(get_third_item_const_generic(&[1u8, 2, 3, 4]), &3);
-/// ```
-///
-/// Note that the [`AssocArraySize`] trait can be used to determine the appropriate
-/// [`Array`] size for a given `[T; N]`, and the [`ArrayN`] trait (which internally uses
-/// [`AssocArraySize`]) can be used to determine the specific [`Array`] type for a given
-/// const generic size.
 #[repr(transparent)]
 pub struct Array<T, U: ArraySize>(pub U::ArrayType<T>);
 
@@ -486,17 +460,6 @@ where
     }
 }
 
-impl<T, U, const N: usize> AsRef<Array<T, U>> for [T; N]
-where
-    U: ArraySize<ArrayType<T> = [T; N]>,
-{
-    #[inline]
-    fn as_ref(&self) -> &Array<T, U> {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-        unsafe { &*self.as_ptr().cast() }
-    }
-}
-
 impl<T, U> AsMut<[T]> for Array<T, U>
 where
     U: ArraySize,
@@ -514,17 +477,6 @@ where
     #[inline]
     fn as_mut(&mut self) -> &mut [T; N] {
         &mut self.0
-    }
-}
-
-impl<T, U, const N: usize> AsMut<Array<T, U>> for [T; N]
-where
-    U: ArraySize<ArrayType<T> = [T; N]>,
-{
-    #[inline]
-    fn as_mut(&mut self) -> &mut Array<T, U> {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-        unsafe { &mut *self.as_mut_ptr().cast() }
     }
 }
 
@@ -663,7 +615,8 @@ where
 {
     #[inline]
     fn from(array_ref: &'a [T; N]) -> &'a Array<T, U> {
-        array_ref.as_ref()
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
+        unsafe { &*array_ref.as_ptr().cast() }
     }
 }
 
@@ -683,7 +636,8 @@ where
 {
     #[inline]
     fn from(array_ref: &'a mut [T; N]) -> &'a mut Array<T, U> {
-        array_ref.as_mut()
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
+        unsafe { &mut *array_ref.as_mut_ptr().cast() }
     }
 }
 
