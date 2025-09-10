@@ -292,8 +292,8 @@ where
     /// Panics if `U` is 0.
     #[allow(clippy::arithmetic_side_effects)]
     #[inline]
-    pub fn slice_as_chunks(buf: &[T]) -> (&[Self], &[T]) {
-        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+    pub const fn slice_as_chunks(buf: &[T]) -> (&[Self], &[T]) {
+        assert!(U::USIZE != 0, "chunk size must be non-zero");
         // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
         // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
         // thus overflow on multiplication and underflow on substraction are impossible.
@@ -315,8 +315,8 @@ where
     /// Panics if `U` is 0.
     #[allow(clippy::arithmetic_side_effects)]
     #[inline]
-    pub fn slice_as_chunks_mut(buf: &mut [T]) -> (&mut [Self], &mut [T]) {
-        assert_ne!(U::USIZE, 0, "chunk size must be non-zero");
+    pub const fn slice_as_chunks_mut(buf: &mut [T]) -> (&mut [Self], &mut [T]) {
+        assert!(U::USIZE != 0, "chunk size must be non-zero");
         // Arithmetic safety: we have checked that `N::USIZE` is not zero, thus
         // division always returns correct result. `tail_pos` can not be bigger than `buf.len()`,
         // thus overflow on multiplication and underflow on substraction are impossible.
@@ -375,28 +375,28 @@ where
 {
     /// Transform slice to slice of core array type.
     #[inline]
-    pub fn cast_slice_to_core(slice: &[Self]) -> &[[T; N]] {
+    pub const fn cast_slice_to_core(slice: &[Self]) -> &[[T; N]] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
     }
 
     /// Transform mutable slice to mutable slice of core array type.
     #[inline]
-    pub fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; N]] {
+    pub const fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; N]] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
 
     /// Transform slice to slice of core array type.
     #[inline]
-    pub fn cast_slice_from_core(slice: &[[T; N]]) -> &[Self] {
+    pub const fn cast_slice_from_core(slice: &[[T; N]]) -> &[Self] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
     }
 
     /// Transform mutable slice to mutable slice of core array type.
     #[inline]
-    pub fn cast_slice_from_core_mut(slice: &mut [[T; N]]) -> &mut [Self] {
+    pub const fn cast_slice_from_core_mut(slice: &mut [[T; N]]) -> &mut [Self] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
