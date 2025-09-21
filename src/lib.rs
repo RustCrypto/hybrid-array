@@ -400,6 +400,18 @@ where
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
+
+    /// Obtain a flattened slice from a slice of array chunks.
+    #[inline]
+    pub fn slice_as_flattened(slice: &[Self]) -> &[T] {
+        Self::cast_slice_to_core(slice).as_flattened()
+    }
+
+    /// Obtain a mutable flattened slice from a mutable slice of array chunks.
+    #[inline]
+    pub fn slice_as_flattened_mut(slice: &mut [Self]) -> &mut [T] {
+        Self::cast_slice_to_core_mut(slice).as_flattened_mut()
+    }
 }
 
 impl<T, U> Array<MaybeUninit<T>, U>
