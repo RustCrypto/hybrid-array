@@ -363,45 +363,6 @@ where
     U: ArraySize,
     V: ArraySize,
 {
-    /// Takes a `&mut Array<Array<T, N>,M>`, and flattens it to a `&mut [T]`.
-    ///
-    /// # Panics
-    ///
-    /// This panics if the length of the resulting slice would overflow a `usize`.
-    ///
-    /// This is only possible when flattening a slice of arrays of zero-sized
-    /// types, and thus tends to be irrelevant in practice. If
-    /// `size_of::<T>() > 0`, this will never panic.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use hybrid_array::{Array, typenum::U3};
-    ///
-    /// fn add_5_to_all(slice: &mut [i32]) {
-    ///     for i in slice {
-    ///         *i += 5;
-    ///     }
-    /// }
-    ///
-    /// let mut array: Array<Array<i32, U3>, U3> = Array([Array([1_i32, 2, 3]), Array([4, 5, 6]), Array([7, 8, 9])]);
-    /// add_5_to_all(array.as_flattened_mut());
-    /// assert_eq!(array, Array([Array([6, 7, 8]), Array([9, 10, 11]), Array([12, 13, 14])]));
-    /// ```
-    pub fn as_flattened_mut(&mut self) -> &mut [T] {
-        let len = if size_of::<T>() == 0 {
-            self.len()
-                .checked_mul(U::USIZE)
-                .expect("slice len overflow")
-        } else {
-            // SAFETY: `self.len() * N` cannot overflow because `self` is
-            // already in the address space.
-            unsafe { self.len().unchecked_mul(U::USIZE) }
-        };
-        // SAFETY: `[T]` is layout-identical to `[T; U]`
-        unsafe { slice::from_raw_parts_mut(self.as_mut_ptr().cast(), len) }
-    }
-
     /// Takes a `&Array<Array<T, N>, >>`, and flattens it to a `&[T]`.
     ///
     /// # Panics
@@ -433,17 +394,36 @@ where
     /// assert!(empty_slice_of_arrays.as_flattened().is_empty());
     /// ```
     pub fn as_flattened(&self) -> &[T] {
-        let len = if size_of::<T>() == 0 {
-            self.len()
-                .checked_mul(U::USIZE)
-                .expect("slice len overflow")
-        } else {
-            // SAFETY: `self.len() * N` cannot overflow because `self` is
-            // already in the address space.
-            unsafe { self.len().unchecked_mul(U::USIZE) }
-        };
-        // SAFETY: `[T]` is layout-identical to `[T; U]`
-        unsafe { slice::from_raw_parts(self.as_ptr().cast(), len) }
+        Array::slice_as_flattened(self.as_slice())
+    }
+
+    /// Takes a `&mut Array<Array<T, N>,M>`, and flattens it to a `&mut [T]`.
+    ///
+    /// # Panics
+    ///
+    /// This panics if the length of the resulting slice would overflow a `usize`.
+    ///
+    /// This is only possible when flattening a slice of arrays of zero-sized
+    /// types, and thus tends to be irrelevant in practice. If
+    /// `size_of::<T>() > 0`, this will never panic.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use hybrid_array::{Array, typenum::U3};
+    ///
+    /// fn add_5_to_all(slice: &mut [i32]) {
+    ///     for i in slice {
+    ///         *i += 5;
+    ///     }
+    /// }
+    ///
+    /// let mut array: Array<Array<i32, U3>, U3> = Array([Array([1_i32, 2, 3]), Array([4, 5, 6]), Array([7, 8, 9])]);
+    /// add_5_to_all(array.as_flattened_mut());
+    /// assert_eq!(array, Array([Array([6, 7, 8]), Array([9, 10, 11]), Array([12, 13, 14])]));
+    /// ```
+    pub fn as_flattened_mut(&mut self) -> &mut [T] {
+        Array::slice_as_flattened_mut(self.as_mut_slice())
     }
 }
 
