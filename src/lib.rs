@@ -184,14 +184,30 @@ where
 {
     /// Returns a slice containing the entire array. Equivalent to `&s[..]`.
     #[inline]
-    pub fn as_slice(&self) -> &[T] {
-        self.0.as_ref()
+    pub const fn as_slice(&self) -> &[T] {
+        // SAFETY: `[T]` is layout-identical to `Array<T, U>`, which is a `repr(transparent)`
+        // newtype for `[T; N]`.
+        unsafe { slice::from_raw_parts(self.as_ptr(), U::USIZE) }
     }
 
     /// Returns a mutable slice containing the entire array. Equivalent to `&mut s[..]`.
     #[inline]
-    pub fn as_mut_slice(&mut self) -> &mut [T] {
-        self.0.as_mut()
+    pub const fn as_mut_slice(&mut self) -> &mut [T] {
+        // SAFETY: `[T]` is layout-identical to `Array<T, U>`, which is a `repr(transparent)`
+        // newtype for `[T; N]`.
+        unsafe { slice::from_raw_parts_mut(self.as_mut_ptr(), U::USIZE) }
+    }
+
+    /// Returns a pointer to the start of the array.
+    #[allow(trivial_casts)]
+    pub const fn as_ptr(&self) -> *const T {
+        self as *const Self as *const T
+    }
+
+    /// Returns a mutable pointer to the start of the array.
+    #[allow(trivial_casts)]
+    pub const fn as_mut_ptr(&mut self) -> *mut T {
+        self as *mut Self as *mut T
     }
 
     /// Returns an iterator over the array.
@@ -393,7 +409,7 @@ where
     /// let empty_slice_of_arrays: &Array<Array<u32, U10>, U0>  = &Array([]);
     /// assert!(empty_slice_of_arrays.as_flattened().is_empty());
     /// ```
-    pub fn as_flattened(&self) -> &[T] {
+    pub const fn as_flattened(&self) -> &[T] {
         Array::slice_as_flattened(self.as_slice())
     }
 
@@ -422,7 +438,7 @@ where
     /// add_5_to_all(array.as_flattened_mut());
     /// assert_eq!(array, Array([Array([6, 7, 8]), Array([9, 10, 11]), Array([12, 13, 14])]));
     /// ```
-    pub fn as_flattened_mut(&mut self) -> &mut [T] {
+    pub const fn as_flattened_mut(&mut self) -> &mut [T] {
         Array::slice_as_flattened_mut(self.as_mut_slice())
     }
 }
