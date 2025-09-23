@@ -144,3 +144,13 @@ fn clone_from_slice() {
     let array = Array::<u8, U6>::clone_from_slice(EXAMPLE_SLICE);
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 }
+
+#[test]
+fn slice_as_flattened() {
+    let slice: &mut [Array<u8, U4>] = &mut [Array([1, 2, 3, 4]), Array([5, 6, 7, 8])];
+    assert_eq!(
+        Array::slice_as_flattened_mut(slice),
+        &mut [1, 2, 3, 4, 5, 6, 7, 8]
+    );
+    assert_eq!(Array::slice_as_flattened(slice), &[1, 2, 3, 4, 5, 6, 7, 8]);
+}

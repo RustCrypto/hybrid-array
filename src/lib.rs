@@ -331,6 +331,32 @@ where
         }
     }
 
+    /// Obtain a flattened slice from a slice of array chunks.
+    #[inline]
+    pub const fn slice_as_flattened(slice: &[Self]) -> &[T] {
+        let len = slice
+            .len()
+            .checked_mul(U::USIZE)
+            .expect("slice len overflow");
+
+        // SAFETY: `[T]` is layout-identical to `Array<T, U>`, which is a `repr(transparent)`
+        // newtype for `[T; N]`.
+        unsafe { slice::from_raw_parts(slice.as_ptr().cast(), len) }
+    }
+
+    /// Obtain a mutable flattened slice from a mutable slice of array chunks.
+    #[inline]
+    pub const fn slice_as_flattened_mut(slice: &mut [Self]) -> &mut [T] {
+        let len = slice
+            .len()
+            .checked_mul(U::USIZE)
+            .expect("slice len overflow");
+
+        // SAFETY: `[T]` is layout-identical to `Array<T, U>`, which is a `repr(transparent)`
+        // newtype for `[T; N]`.
+        unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), len) }
+    }
+
     /// Convert the given slice into a reference to a hybrid array.
     ///
     /// # Panics
@@ -399,18 +425,6 @@ where
     pub const fn cast_slice_from_core_mut(slice: &mut [[T; N]]) -> &mut [Self] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
-    }
-
-    /// Obtain a flattened slice from a slice of array chunks.
-    #[inline]
-    pub fn slice_as_flattened(slice: &[Self]) -> &[T] {
-        Self::cast_slice_to_core(slice).as_flattened()
-    }
-
-    /// Obtain a mutable flattened slice from a mutable slice of array chunks.
-    #[inline]
-    pub fn slice_as_flattened_mut(slice: &mut [Self]) -> &mut [T] {
-        Self::cast_slice_to_core_mut(slice).as_flattened_mut()
     }
 }
 
