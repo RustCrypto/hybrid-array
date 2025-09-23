@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.4.2 (2025-09-21)
+## 0.4.3 (2025-09-23)
+### Added
+- `Array::as_(mut_)ptr` ([#147])
+
+### Changed
+- Remove bounds on `Array::slice_as_flattened(_mut)`; make `const fn` ([#144])
+- Make `Array::as_(mut_)slice` a `const fn` ([#147])
+- Make `Array::<Array<T, U>::as_flattened(_mut)` a `const fn` ([#147])
+
+[#144]: https://github.com/RustCrypto/hybrid-array/pull/144
+[#147]: https://github.com/RustCrypto/hybrid-array/pull/147
+
+## 0.4.2 (2025-09-21) [YANKED]
 ### Added
 - `Array::slice_as_flattened(_mut)` ([#142])
 
