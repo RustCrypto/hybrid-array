@@ -36,14 +36,9 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           targets: ${{ matrix.target }}
-      - run: cargo build --no-default-features --target ${{ matrix.target }}
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features alloc
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features bytemuck
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features extra-sizes
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features serde
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features subtle
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --features zeroize
-      - run: cargo build --no-default-features --target ${{ matrix.target }} --all-features
+      - uses: RustCrypto/actions/cargo-hack-install@master
+      - run: cargo hack build --target ${{ matrix.target }} --feature-powerset --optional-deps bytemuck,serde,subtle,zeroize
+      - run: cargo build --all-features --release
 
   careful:
     runs-on: ubuntu-latest
@@ -110,10 +105,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.toolchain }}
-      - run: cargo test
-      - run: cargo test --features alloc
-      - run: cargo test --features bytemuck
-      - run: cargo test --features extra-sizes
-      - run: cargo test --features serde
-      - run: cargo test --features zeroize
-      - run: cargo test --all-features
+      - uses: RustCrypto/actions/cargo-hack-install@master
+      - run: cargo hack test --feature-powerset --optional-deps bytemuck,serde,subtle,zeroize
+      - run: cargo test --all-features --release
