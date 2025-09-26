@@ -145,6 +145,9 @@ use core::{
 };
 use typenum::{Diff, Sum};
 
+#[cfg(feature = "arbitrary")]
+use arbitrary::Arbitrary;
+
 #[cfg(feature = "bytemuck")]
 use bytemuck::{Pod, Zeroable};
 
@@ -1025,6 +1028,17 @@ where
         Self: Clone,
     {
         slice.try_into().expect("slice length mismatch")
+    }
+}
+
+#[cfg(feature = "arbitrary")]
+impl<'a, T, U> Arbitrary<'a> for Array<T, U>
+where
+    T: Arbitrary<'a>,
+    U: ArraySize,
+{
+    fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
+        Self::try_from_fn(|_n| Arbitrary::arbitrary(u))
     }
 }
 
