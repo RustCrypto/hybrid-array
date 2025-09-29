@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.5 (2025-09-29)
+### Added
+- Impl `arbitrary::Arbitrary` for `Array` ([#153])
+
+### Changed
+- Switch from `doc_auto_cfg` to `doc_cfg` ([#154])
+
+[#153]: https://github.com/RustCrypto/hybrid-array/pull/153
+[#154]: https://github.com/RustCrypto/hybrid-array/pull/154
+
 ## 0.4.4 (2025-09-24)
 ### Added
 - Enable the `subtle/const-generics` feature ([#149])
