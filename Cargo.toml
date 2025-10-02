@@ -17,7 +17,7 @@ edition = "2024"
 rust-version = "1.85"
 
 [dependencies]
-typenum = { version = "1.17", features = ["const-generics"] }
+typenum = { version = "1.19", features = ["const-generics"] }
 
 # optional dependencies
 arbitrary = { version = "1", optional = true }
