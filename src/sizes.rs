@@ -873,7 +873,7 @@ mod extra_sizes {
     pub type U21696 = uint!(0 0 0 0 0 0 1 1 0 0 1 0 1 0 1);
 
     impl_array_sizes! {
-        base_noimport,
+        base_extra,
         1040 => U1040,
         1056 => U1056,
         1072 => U1072,
