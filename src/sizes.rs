@@ -19,7 +19,7 @@ pub use extra_sizes::*;
 /// `N` is used over `UN::USIZE` in order to improve compile times (avoids associated constant
 /// resolution)
 macro_rules! impl_array_sizes {
-    ($($len:expr => $ty:ident),+ $(,)?) => {
+    ($testname:ident, $($len:expr => $ty:ident),+ $(,)?) => {
         $(
             unsafe impl ArraySize for $ty {
                 type ArrayType<T> = [T; $len];
@@ -29,20 +29,29 @@ macro_rules! impl_array_sizes {
                 type Size = $ty;
             }
         )+
+
+        #[test]
+        fn $testname() {
+            use typenum::Unsigned;
+            $(
+                assert_eq!($len, $ty::USIZE);
+            )+
+        }
      };
 }
 
 /// Implement array sizes, also importing the relevant constants.
 macro_rules! impl_array_sizes_with_import {
-    ($($len:expr => $ty:ident),+ $(,)?) => {
+    ($testname:ident, $($len:expr => $ty:ident),+ $(,)?) => {
         $(
             pub use typenum::consts::$ty;
-            impl_array_sizes!($len => $ty);
         )+
+        impl_array_sizes!($testname, $($len => $ty),+);
      };
 }
 
 impl_array_sizes_with_import! {
+    base,
     0 => U0,
     1 => U1,
     2 => U2,
@@ -864,6 +873,7 @@ mod extra_sizes {
     pub type U21696 = uint!(0 0 0 0 0 0 1 1 0 0 1 0 1 0 1);
 
     impl_array_sizes! {
+        base_noimport,
         1040 => U1040,
         1056 => U1056,
         1072 => U1072,
@@ -1058,6 +1068,7 @@ mod extra_sizes {
 
     // ML-DSA sizes
     impl_array_sizes! {
+        ml_dsa,
         2420 => U2420,
         3309 => U3309,
         4480 => U4480,
@@ -1069,6 +1080,7 @@ mod extra_sizes {
 
     // SLH-DSA sizes
     impl_array_sizes! {
+        slh_dsa,
         7856 => U7856,
         16224 => U16224,
         17088 => U17088,
@@ -1079,6 +1091,7 @@ mod extra_sizes {
 
     // Kemeleon ML-KEM Encoding sizes
     impl_array_sizes! {
+        kemeleon,
         749 => U749,
         781 => U781,
         877 => U877,
@@ -1092,6 +1105,7 @@ mod extra_sizes {
 
     // LMS sizes
     impl_array_sizes! {
+        lms,
         2047 => U2047,
         2180 => U2180,
         4292 => U4292,
@@ -1100,6 +1114,7 @@ mod extra_sizes {
 
     // Frodo sizes
     impl_array_sizes! {
+        frodokem,
         9616 => U9616,
         19888 => U19888,
         9720 => U9720,
