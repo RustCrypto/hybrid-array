@@ -26,9 +26,6 @@ serde = { version = "1", optional = true, default-features = false }
 subtle = { version = "2", optional = true, default-features = false, features = ["const-generics"] }
 zeroize = { version = "1.8", optional = true, default-features = false }
 
-[dev-dependencies]
-bincode = { version = "2", features = ["serde"] }
-
 [features]
 alloc = []
 extra-sizes = []
