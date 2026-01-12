@@ -129,6 +129,9 @@ mod traits;
 #[cfg(feature = "serde")]
 mod serde;
 
+#[cfg(feature = "wincode")]
+mod wincode;
+
 pub use crate::{iter::TryFromIteratorError, traits::*};
 pub use typenum;
 

@@ -18,6 +18,7 @@ rust-version = "1.85"
 
 [dependencies]
 typenum = { version = "1.17", features = ["const-generics"] }
+wincode = { version = "0.2.5" }
 
 # optional dependencies
 arbitrary = { version = "1", optional = true }
@@ -29,6 +30,8 @@ zeroize = { version = "1.8", optional = true, default-features = false }
 [features]
 alloc = []
 extra-sizes = []
+wincode = []
+
 
 [package.metadata.docs.rs]
 all-features = true
