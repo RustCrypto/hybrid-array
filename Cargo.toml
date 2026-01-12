@@ -30,7 +30,7 @@ wincode = { version = "0.2.5", optional = true, default-features = false }
 [features]
 alloc = []
 extra-sizes = []
-wincode = []
+wincode = ["dep:wincode"]
 
 [package.metadata.docs.rs]
 all-features = true
