@@ -86,7 +86,7 @@ where
         let mut guard = SliceDropGuard::<T::Dst>::new(base);
         if let TypeMeta::Static { size, .. } = Self::TYPE_META {
             // SAFETY: `Self::TYPE_META` specifies a static size, which is `U::USIZE * static_size_of(T)`.
-            // `U::USIZE reads of `T` will consume `size` bytes, fully consuming the trusted window.
+            // `U::USIZE` reads of `T` will consume `size` bytes, fully consuming the trusted window.
             let reader = &mut unsafe { reader.as_trusted_for(size) }?;
             for i in 0..U::USIZE {
                 let slot = unsafe { &mut *base.add(i) };
