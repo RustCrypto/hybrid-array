@@ -159,8 +159,8 @@ fn slice_as_flattened() {
 #[cfg(feature = "zerocopy")]
 #[allow(unused)]
 fn zerocopy_traits() {
-    use zerocopy::{IntoBytes, FromBytes, Unaligned, Immutable, KnownLayout};
+    use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
     struct Check<T: IntoBytes + FromBytes + Unaligned + Immutable + KnownLayout>(T);
-    let ok:  Check::<Array<u8, U5>> = Check(Array([1, 2, 3, 4, 5]));
+    let ok: Check<Array<u8, U5>> = Check(Array([1, 2, 3, 4, 5]));
     // let not_unaligned:  Check::<Array<u16, U5>> = Check(Array([1, 2, 3, 4, 5]));
 }
