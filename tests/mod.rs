@@ -154,3 +154,13 @@ fn slice_as_flattened() {
     );
     assert_eq!(Array::slice_as_flattened(slice), &[1, 2, 3, 4, 5, 6, 7, 8]);
 }
+
+#[test]
+#[cfg(feature = "zerocopy")]
+#[allow(unused)]
+fn zerocopy_traits() {
+    use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
+    struct Check<T: IntoBytes + FromBytes + Unaligned + Immutable + KnownLayout>(T);
+    let ok: Check<Array<u8, U5>> = Check(Array([1, 2, 3, 4, 5]));
+    // let not_unaligned:  Check::<Array<u16, U5>> = Check(Array([1, 2, 3, 4, 5]));
+}

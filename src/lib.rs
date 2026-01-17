@@ -157,6 +157,9 @@ use subtle::{Choice, ConditionallySelectable, ConstantTimeEq};
 #[cfg(feature = "zeroize")]
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
+#[cfg(feature = "zerocopy")]
+use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
+
 /// Type alias for [`Array`] which is const generic around a size `N`, ala `[T; N]`.
 pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 
@@ -174,6 +177,10 @@ pub type ArrayN<T, const N: usize> = Array<T, <[T; N] as AssocArraySize>::Size>;
 ///
 /// let arr: Array<u8, U3> = Array([1, 2, 3]);
 /// ```
+#[cfg_attr(
+    feature = "zerocopy",
+    derive(IntoBytes, FromBytes, Immutable, Unaligned, KnownLayout)
+)]
 #[repr(transparent)]
 pub struct Array<T, U: ArraySize>(pub U::ArrayType<T>);
 
