@@ -1,5 +1,7 @@
+#![allow(missing_docs, clippy::cast_possible_truncation, clippy::unwrap_used)]
+
+use core::mem::MaybeUninit;
 use hybrid_array::{Array, ArrayN};
-use std::mem::MaybeUninit;
 use typenum::{U0, U2, U3, U4, U5, U6, U7};
 
 const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
@@ -135,7 +137,7 @@ fn maybe_uninit() {
 fn map() {
     let base = Array::<u8, U4>::from([1, 2, 3, 4]);
     let expected = Array::<u16, U4>::from([2, 3, 4, 5]);
-    assert_eq!(base.map(|item| (item as u16) + 1), expected);
+    assert_eq!(base.map(|item| u16::from(item) + 1), expected);
 }
 
 #[test]

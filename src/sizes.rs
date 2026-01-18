@@ -21,6 +21,8 @@ pub use extra_sizes::*;
 macro_rules! impl_array_sizes {
     ($testname:ident, $($len:expr => $ty:ident),+ $(,)?) => {
         $(
+            // SAFETY: we depend on `<$ty as Unsigned>::USIZE == $len` for unsafe pointer casts.
+            // We ensure this property holds by having the macro write a test for that below.
             unsafe impl ArraySize for $ty {
                 type ArrayType<T> = [T; $len];
             }
