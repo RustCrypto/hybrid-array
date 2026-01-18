@@ -15,10 +15,15 @@
     clippy::checked_conversions,
     clippy::from_iter_instead_of_collect,
     clippy::missing_errors_doc,
+    clippy::missing_panics_doc,
     clippy::mod_module_files,
+    clippy::must_use_candidate,
     clippy::implicit_saturating_sub,
     clippy::panic,
     clippy::panic_in_result_fn,
+    clippy::ptr_as_ptr,
+    clippy::ref_as_ptr,
+    clippy::semicolon_if_nothing_returned,
     clippy::unwrap_used,
     missing_docs,
     missing_debug_implementations,
@@ -209,15 +214,13 @@ where
     }
 
     /// Returns a pointer to the start of the array.
-    #[allow(trivial_casts)]
     pub const fn as_ptr(&self) -> *const T {
-        self as *const Self as *const T
+        ptr::from_ref::<Self>(self).cast::<T>()
     }
 
     /// Returns a mutable pointer to the start of the array.
-    #[allow(trivial_casts)]
     pub const fn as_mut_ptr(&mut self) -> *mut T {
-        self as *mut Self as *mut T
+        ptr::from_mut::<Self>(self).cast::<T>()
     }
 
     /// Returns an iterator over the array.
@@ -358,6 +361,9 @@ where
     }
 
     /// Obtain a flattened slice from a slice of array chunks.
+    ///
+    /// # Panics
+    /// - if the length calculation for the flattened slice overflows
     #[inline]
     pub const fn slice_as_flattened(slice: &[Self]) -> &[T] {
         let len = slice
@@ -371,6 +377,9 @@ where
     }
 
     /// Obtain a mutable flattened slice from a mutable slice of array chunks.
+    ///
+    /// # Panics
+    /// - if the length calculation for the flattened slice overflows
     #[inline]
     pub const fn slice_as_flattened_mut(slice: &mut [Self]) -> &mut [T] {
         let len = slice
@@ -492,6 +501,7 @@ where
     U: ArraySize,
 {
     /// Create an uninitialized array of [`MaybeUninit`]s for the given type.
+    #[must_use]
     pub const fn uninit() -> Array<MaybeUninit<T>, U> {
         // SAFETY: `Array` is a `repr(transparent)` newtype for `[MaybeUninit<T>, N]`, i.e. an
         // array of uninitialized memory mediated via the `MaybeUninit` interface, where the inner
@@ -1082,7 +1092,7 @@ where
 
     fn conditional_assign(&mut self, other: &Self, choice: Choice) {
         for (a_i, b_i) in self.iter_mut().zip(other) {
-            a_i.conditional_assign(b_i, choice)
+            a_i.conditional_assign(b_i, choice);
         }
     }
 }
@@ -1109,7 +1119,7 @@ where
 {
     #[inline]
     fn zeroize(&mut self) {
-        self.0.as_mut().iter_mut().zeroize()
+        self.0.as_mut().iter_mut().zeroize();
     }
 }
 
