@@ -5,33 +5,6 @@
     html_logo_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg",
     html_favicon_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg"
 )]
-#![warn(
-    clippy::arithmetic_side_effects,
-    clippy::cast_lossless,
-    clippy::cast_possible_truncation,
-    clippy::cast_possible_wrap,
-    clippy::cast_precision_loss,
-    clippy::cast_sign_loss,
-    clippy::checked_conversions,
-    clippy::from_iter_instead_of_collect,
-    clippy::missing_errors_doc,
-    clippy::missing_panics_doc,
-    clippy::mod_module_files,
-    clippy::must_use_candidate,
-    clippy::implicit_saturating_sub,
-    clippy::panic,
-    clippy::panic_in_result_fn,
-    clippy::ptr_as_ptr,
-    clippy::ref_as_ptr,
-    clippy::semicolon_if_nothing_returned,
-    clippy::unwrap_used,
-    missing_docs,
-    missing_debug_implementations,
-    trivial_casts,
-    trivial_numeric_casts,
-    unused_lifetimes,
-    unused_qualifications
-)]
 
 //! ## Features
 //!
