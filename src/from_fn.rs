@@ -14,7 +14,8 @@ where
     /// Create array where each array element `T` is returned by the `f` call.
     #[inline]
     pub fn from_fn(mut f: impl FnMut(usize) -> T) -> Self {
-        Self::try_from_fn::<Infallible>(|n| Ok(f(n))).expect("should never fail")
+        let Ok(ret) = Self::try_from_fn::<Infallible>(|n| Ok(f(n)));
+        ret
     }
 
     /// Create array fallibly where each array element `T` is returned by the `f` call, or return
