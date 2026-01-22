@@ -3,6 +3,7 @@
 use crate::Array;
 use core::{
     borrow::{Borrow, BorrowMut},
+    fmt::Debug,
     ops::{Index, IndexMut, Range},
 };
 use typenum::Unsigned;
@@ -17,7 +18,7 @@ use typenum::Unsigned;
 ///
 /// NOTE: This trait is effectively sealed and can not be implemented by third-party crates.
 /// It is implemented only for a number of types defined in [`typenum::consts`].
-pub unsafe trait ArraySize: Unsigned {
+pub unsafe trait ArraySize: Unsigned + Debug {
     /// Array type which corresponds to this size.
     ///
     /// This is always defined to be `[T; N]` where `N` is the same as
