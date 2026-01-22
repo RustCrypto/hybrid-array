@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.6 (2026-01-22)
+### Added
+- Optional dependency on `zerocopy` with impls for `Array` ([#162])
+- `Debug` bound to `ArraySize` ([#165])
+
+[#162]: https://github.com/RustCrypto/hybrid-array/pull/162
+[#165]: https://github.com/RustCrypto/hybrid-array/pull/165
+
 ## 0.4.5 (2025-09-29)
 ### Added
 - Impl `arbitrary::Arbitrary` for `Array` ([#153])
