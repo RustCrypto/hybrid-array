@@ -47,7 +47,6 @@ where
 
 impl<T, N, M> Unflatten<M> for Array<T, N>
 where
-    T: Default,
     N: ArraySize + Div<M> + Rem<M, Output = U0>,
     M: ArraySize,
     Quot<N, M>: ArraySize,
@@ -69,7 +68,6 @@ where
 
 impl<'a, T, N, M> Unflatten<M> for &'a Array<T, N>
 where
-    T: Default,
     N: ArraySize + Div<M> + Rem<M, Output = U0>,
     M: ArraySize,
     Quot<N, M>: ArraySize,
