@@ -100,6 +100,7 @@ extern crate alloc;
 
 pub mod sizes;
 
+mod flatten;
 mod from_fn;
 mod iter;
 mod traits;
@@ -107,7 +108,11 @@ mod traits;
 #[cfg(feature = "serde")]
 mod serde;
 
-pub use crate::{iter::TryFromIteratorError, traits::*};
+pub use crate::{
+    flatten::{Flatten, Unflatten},
+    iter::TryFromIteratorError,
+    traits::*,
+};
 pub use typenum;
 
 use core::{
