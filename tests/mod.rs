@@ -10,7 +10,7 @@ const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
 const _FOO: ArrayN<u8, 4> = Array([1, 2, 3, 4]);
 
 #[test]
-fn tryfrom_slice_for_array() {
+fn tryfrom_slice_for_clonable_array() {
     assert!(Array::<u8, U0>::try_from(EXAMPLE_SLICE).is_err());
     assert!(Array::<u8, U3>::try_from(EXAMPLE_SLICE).is_err());
 
@@ -29,6 +29,24 @@ fn tryfrom_slice_for_array_ref() {
     assert_eq!(array_ref.as_slice(), EXAMPLE_SLICE);
 
     assert!(<&Array::<u8, U7>>::try_from(EXAMPLE_SLICE).is_err());
+}
+
+#[test]
+fn slice_as_array() {
+    type A = Array<u8, U2>;
+    assert_eq!(A::slice_as_array(&[]), None);
+    assert_eq!(A::slice_as_array(&[1]), None);
+    assert_eq!(A::slice_as_array(&[1, 2]), Some(&Array([1, 2])));
+    assert_eq!(A::slice_as_array(&[1, 2, 3]), None);
+}
+
+#[test]
+fn slice_as_mut_array() {
+    type A = Array<u8, U2>;
+    assert_eq!(A::slice_as_mut_array(&mut []), None);
+    assert_eq!(A::slice_as_mut_array(&mut [1]), None);
+    assert_eq!(A::slice_as_mut_array(&mut [1, 2]), Some(&mut Array([1, 2])));
+    assert_eq!(A::slice_as_mut_array(&mut [1, 2, 3]), None);
 }
 
 #[test]

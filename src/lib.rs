@@ -292,6 +292,39 @@ where
         }
     }
 
+    /// Get a reference to an array from a slice, if the slice is exactly the size of the array.
+    ///
+    /// Returns `None` if the slice's length is not exactly equal to the array size.
+    #[inline]
+    #[must_use]
+    pub const fn slice_as_array(slice: &[T]) -> Option<&Self> {
+        if slice.len() == U::USIZE {
+            // SAFETY: `Self` is ensured to be layout-identical to `[T; U::USIZE]`, and immediately
+            // above we validated that `slice` is also layout-identical to `[T; U::USIZE]`,
+            // therefore the cast is valid.
+            unsafe { Some(&*slice.as_ptr().cast()) }
+        } else {
+            None
+        }
+    }
+
+    /// Get a mutable reference to an array from a slice, if the slice is exactly the size of the
+    /// array.
+    ///
+    /// Returns `None` if the slice's length is not exactly equal to the array size.
+    #[inline]
+    #[must_use]
+    pub const fn slice_as_mut_array(slice: &mut [T]) -> Option<&mut Self> {
+        if slice.len() == U::USIZE {
+            // SAFETY: `Self` is ensured to be layout-identical to `[T; U::USIZE]`, and immediately
+            // above we validated that `slice` is also layout-identical to `[T; U::USIZE]`,
+            // therefore the cast is valid.
+            unsafe { Some(&mut *slice.as_mut_ptr().cast()) }
+        } else {
+            None
+        }
+    }
+
     /// Splits the shared slice into a slice of `U`-element arrays, starting at the beginning
     /// of the slice, and a remainder slice with length strictly less than `U`.
     ///
@@ -883,6 +916,38 @@ unsafe impl<T, U: ArraySize> Send for Array<T, U> where T: Send {}
 /// also be `Sync`.
 unsafe impl<T, U: ArraySize> Sync for Array<T, U> where T: Sync {}
 
+impl<'a, T, U> TryFrom<&'a [T]> for &'a Array<T, U>
+where
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(slice: &'a [T]) -> Result<Self, TryFromSliceError> {
+        check_slice_length::<T, U>(slice)?;
+
+        // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
+        // array with length checked above.
+        Ok(unsafe { &*slice.as_ptr().cast() })
+    }
+}
+
+impl<'a, T, U> TryFrom<&'a mut [T]> for &'a mut Array<T, U>
+where
+    U: ArraySize,
+{
+    type Error = TryFromSliceError;
+
+    #[inline]
+    fn try_from(slice: &'a mut [T]) -> Result<Self, TryFromSliceError> {
+        check_slice_length::<T, U>(slice)?;
+
+        // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
+        // array with length checked above.
+        Ok(unsafe { &mut *slice.as_mut_ptr().cast() })
+    }
+}
+
 impl<'a, T, U> TryFrom<&'a [T]> for Array<T, U>
 where
     Self: Clone,
@@ -949,38 +1014,6 @@ where
     #[inline]
     fn try_from(v: &'a alloc::vec::Vec<T>) -> Result<Self, TryFromSliceError> {
         Self::try_from(v.as_slice())
-    }
-}
-
-impl<'a, T, U> TryFrom<&'a [T]> for &'a Array<T, U>
-where
-    U: ArraySize,
-{
-    type Error = TryFromSliceError;
-
-    #[inline]
-    fn try_from(slice: &'a [T]) -> Result<Self, TryFromSliceError> {
-        check_slice_length::<T, U>(slice)?;
-
-        // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
-        // array with length checked above.
-        Ok(unsafe { &*slice.as_ptr().cast() })
-    }
-}
-
-impl<'a, T, U> TryFrom<&'a mut [T]> for &'a mut Array<T, U>
-where
-    U: ArraySize,
-{
-    type Error = TryFromSliceError;
-
-    #[inline]
-    fn try_from(slice: &'a mut [T]) -> Result<Self, TryFromSliceError> {
-        check_slice_length::<T, U>(slice)?;
-
-        // SAFETY: `Array<T, U>` is a `repr(transparent)` newtype for a core
-        // array with length checked above.
-        Ok(unsafe { &mut *slice.as_mut_ptr().cast() })
     }
 }
 
