@@ -145,3 +145,55 @@ where
         self.into()
     }
 }
+
+/// Extension trait for `[T]` providing methods for working with [`Array`].
+pub trait SliceExt<T>: sealed::Sealed {
+    /// Get a reference to an array from a slice, if the slice is exactly the size of the array.
+    ///
+    /// Returns `None` if the slice's length is not exactly equal to the array size.
+    fn as_hybrid_array<U: ArraySize>(&self) -> Option<&Array<T, U>>;
+
+    /// Get a mutable reference to an array from a slice, if the slice is exactly the size of the
+    /// array.
+    ///
+    /// Returns `None` if the slice's length is not exactly equal to the array size.
+    fn as_mut_hybrid_array<U: ArraySize>(&mut self) -> Option<&mut Array<T, U>>;
+
+    /// Splits the shared slice into a slice of `U`-element arrays, starting at the beginning
+    /// of the slice, and a remainder slice with length strictly less than `U`.
+    ///
+    /// # Panics
+    /// If `U` is 0.
+    fn as_hybrid_chunks<U: ArraySize>(&self) -> (&[Array<T, U>], &[T]);
+
+    /// Splits the exclusive slice into a slice of `U`-element arrays, starting at the beginning
+    /// of the slice, and a remainder slice with length strictly less than `U`.
+    ///
+    /// # Panics
+    /// If `U` is 0.
+    fn as_hybrid_chunks_mut<U: ArraySize>(&mut self) -> (&mut [Array<T, U>], &mut [T]);
+}
+
+impl<T> SliceExt<T> for [T] {
+    fn as_hybrid_array<U: ArraySize>(&self) -> Option<&Array<T, U>> {
+        Array::slice_as_array(self)
+    }
+
+    fn as_mut_hybrid_array<U: ArraySize>(&mut self) -> Option<&mut Array<T, U>> {
+        Array::slice_as_mut_array(self)
+    }
+
+    fn as_hybrid_chunks<U: ArraySize>(&self) -> (&[Array<T, U>], &[T]) {
+        Array::slice_as_chunks(self)
+    }
+
+    fn as_hybrid_chunks_mut<U: ArraySize>(&mut self) -> (&mut [Array<T, U>], &mut [T]) {
+        Array::slice_as_chunks_mut(self)
+    }
+}
+
+impl<T> sealed::Sealed for [T] {}
+
+mod sealed {
+    pub trait Sealed {}
+}
