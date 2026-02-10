@@ -874,6 +874,11 @@ mod extra_sizes {
     pub type U21632 = uint!(0 0 0 0 0 0 0 1 0 0 1 0 1 0 1);
     pub type U21696 = uint!(0 0 0 0 0 0 1 1 0 0 1 0 1 0 1);
 
+    // HKDF-Expand common max output sizes
+    pub type U8160 = uint!(0 0 0 0 0 1 1 1 1 1 1 1 1);
+    pub type U12240 = uint!(0 0 0 0 1 0 1 1 1 1 1 1 0 1);
+    pub type U16320 = uint!(0 0 0 0 0 0 1 1 1 1 1 1 1 1);
+
     impl_array_sizes! {
         base_extra,
         1040 => U1040,
@@ -1129,5 +1134,13 @@ mod extra_sizes {
         43088 => U43088,
         21632 => U21632,
         21696 => U21696,
+    }
+
+    // HKDF-Expand common max output sizes
+    impl_array_sizes! {
+        hkdf_expand_max_output,
+        8160 => U8160,
+        12240 => U12240,
+        16320 => U16320,
     }
 }
