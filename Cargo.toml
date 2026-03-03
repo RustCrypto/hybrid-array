@@ -1,6 +1,6 @@
 [package]
-name = "hybrid-array"
-version = "0.4.5"
+name = "hybrid-array-arcium-fork"
+version = "0.4.5-patch.1"
 description = """
 Hybrid typenum-based and const generic array types designed to provide the
 flexibility of typenum-based expressions while also allowing interoperability
@@ -16,6 +16,9 @@ readme = "README.md"
 edition = "2024"
 rust-version = "1.85"
 
+[lib]
+name = "hybrid_array"
+
 [dependencies]
 typenum = { version = "1.17", features = ["const-generics"] }
 
@@ -25,7 +28,7 @@ bytemuck = { version = "1", optional = true, default-features = false }
 serde = { version = "1", optional = true, default-features = false }
 subtle = { version = "2", optional = true, default-features = false, features = ["const-generics"] }
 zeroize = { version = "1.8", optional = true, default-features = false }
-wincode = { version = "0.2.5", optional = true, default-features = false }
+wincode = { version = "0.2.5-patch.1", optional = true, default-features = false, package = "wincode-arcium-fork" }
 
 [features]
 alloc = []
