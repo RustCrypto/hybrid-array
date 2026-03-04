@@ -16,7 +16,7 @@ checksum = "b6b1fc10dbac614ebc03540c9dbd60e83887fda27794998c6528f1782047d540"
 
 [[package]]
 name = "hybrid-array-arcium-fork"
-version = "0.4.5-patch.1"
+version = "0.4.6"
 dependencies = [
  "arbitrary",
  "bytemuck",
@@ -116,9 +116,9 @@ checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
 name = "wincode-arcium-fork"
-version = "0.2.5-patch.1"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2252b589b1719bc4d7b5d9e53916c8037fa9ff7c7fdec06e9c87e7405f18301f"
+checksum = "ac208382e756b2fd641a399620d619b35df0894e3ea4fed9d1b4cdf07496b587"
 dependencies = [
  "proc-macro2",
  "quote",

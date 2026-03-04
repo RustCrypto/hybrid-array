@@ -1,6 +1,6 @@
 [package]
 name = "hybrid-array-arcium-fork"
-version = "0.4.5-patch.1"
+version = "0.4.6"
 description = """
 Hybrid typenum-based and const generic array types designed to provide the
 flexibility of typenum-based expressions while also allowing interoperability
@@ -28,7 +28,7 @@ bytemuck = { version = "1", optional = true, default-features = false }
 serde = { version = "1", optional = true, default-features = false }
 subtle = { version = "2", optional = true, default-features = false, features = ["const-generics"] }
 zeroize = { version = "1.8", optional = true, default-features = false }
-wincode = { version = "0.2.5-patch.1", optional = true, default-features = false, package = "wincode-arcium-fork" }
+wincode = { version = "0.2.6", optional = true, default-features = false, package = "wincode-arcium-fork" }
 
 [features]
 alloc = []
