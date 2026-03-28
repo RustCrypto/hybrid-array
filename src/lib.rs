@@ -126,7 +126,7 @@ use core::{
     ptr,
     slice::{self, Iter, IterMut},
 };
-use typenum::{Diff, Sum};
+use typenum::{Diff, Sum, U1};
 
 #[cfg(feature = "arbitrary")]
 use arbitrary::Arbitrary;
@@ -401,6 +401,19 @@ where
     }
 }
 
+impl<T> Array<T, U1> {
+    /// Convert a reference to `T` into a reference to an [`Array`] of length [`U1`].
+    pub const fn from_ref(r: &T) -> &Self {
+        Self::cast_from_core(core::array::from_ref(r))
+    }
+
+    /// Converts a mutable reference to `T` into a mutable reference to an [`Array`] of
+    /// length [`U1`].
+    pub const fn from_mut(r: &mut T) -> &mut Self {
+        Self::cast_from_core_mut(core::array::from_mut(r))
+    }
+}
+
 impl<T, U, V> Array<Array<T, U>, V>
 where
     U: ArraySize,
@@ -475,18 +488,18 @@ impl<T, U, const N: usize> Array<T, U>
 where
     U: ArraySize<ArrayType<T> = [T; N]>,
 {
-    /// Transform slice to slice of core array type.
+    /// Cast a reference to a core array to an [`Array`] reference.
     #[inline]
-    pub const fn cast_slice_to_core(slice: &[Self]) -> &[[T; N]] {
+    pub const fn cast_from_core(array_ref: &[T; N]) -> &Self {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
+        unsafe { &*array_ref.as_ptr().cast() }
     }
 
-    /// Transform mutable slice to mutable slice of core array type.
+    /// Cast a mutable reference to a core array to an [`Array`] reference.
     #[inline]
-    pub const fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; N]] {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
-        unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
+    pub const fn cast_from_core_mut(array_ref: &mut [T; N]) -> &mut Self {
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; 1]`
+        unsafe { &mut *array_ref.as_mut_ptr().cast() }
     }
 
     /// Transform slice to slice of core array type.
@@ -499,6 +512,20 @@ where
     /// Transform mutable slice to mutable slice of core array type.
     #[inline]
     pub const fn cast_slice_from_core_mut(slice: &mut [[T; N]]) -> &mut [Self] {
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
+        unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
+    }
+
+    /// Transform slice to slice of core array type.
+    #[inline]
+    pub const fn cast_slice_to_core(slice: &[Self]) -> &[[T; N]] {
+        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
+        unsafe { slice::from_raw_parts(slice.as_ptr().cast(), slice.len()) }
+    }
+
+    /// Transform mutable slice to mutable slice of core array type.
+    #[inline]
+    pub const fn cast_slice_to_core_mut(slice: &mut [Self]) -> &mut [[T; N]] {
         // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; N]`
         unsafe { slice::from_raw_parts_mut(slice.as_mut_ptr().cast(), slice.len()) }
     }
@@ -733,8 +760,7 @@ where
 {
     #[inline]
     fn from(array_ref: &'a [T; N]) -> &'a Array<T, U> {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-        unsafe { &*array_ref.as_ptr().cast() }
+        Array::cast_from_core(array_ref)
     }
 }
 
@@ -754,8 +780,7 @@ where
 {
     #[inline]
     fn from(array_ref: &'a mut [T; N]) -> &'a mut Array<T, U> {
-        // SAFETY: `Self` is a `repr(transparent)` newtype for `[T; $len]`
-        unsafe { &mut *array_ref.as_mut_ptr().cast() }
+        Array::cast_from_core_mut(array_ref)
     }
 }
 

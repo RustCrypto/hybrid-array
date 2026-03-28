@@ -86,6 +86,21 @@ fn split_ref_mut() {
 }
 
 #[test]
+fn from_ref() {
+    let n = 42u64;
+    let array = Array::from_ref(&n);
+    assert_eq!(array[0], n);
+}
+
+#[test]
+fn from_mut() {
+    let mut n = 42u64;
+    let array = Array::from_mut(&mut n);
+    array[0] = 43;
+    assert_eq!(n, 43);
+}
+
+#[test]
 fn from_fn() {
     let array = Array::<u8, U6>::from_fn(|n| (n + 1) as u8);
     assert_eq!(array.as_slice(), EXAMPLE_SLICE);
