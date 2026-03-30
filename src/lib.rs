@@ -207,7 +207,7 @@ where
     /// Returns an iterator that allows modifying each value.
     #[inline]
     pub fn iter_mut(&mut self) -> IterMut<'_, T> {
-        self.as_mut().iter_mut()
+        self.0.as_mut().iter_mut()
     }
 
     /// Returns an array of the same size as `self`, with function `f` applied to each element in
@@ -602,6 +602,16 @@ where
     #[inline]
     fn as_ref(&self) -> &[T; N] {
         &self.0
+    }
+}
+
+impl<T, U> AsMut<Array<T, U>> for Array<T, U>
+where
+    U: ArraySize,
+{
+    #[inline]
+    fn as_mut(&mut self) -> &mut Self {
+        self
     }
 }
 
