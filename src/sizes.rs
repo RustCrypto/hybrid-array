@@ -1143,4 +1143,22 @@ mod extra_sizes {
         12240 => U12240,
         16320 => U16320,
     }
+
+    // HQC-KEM sizes (FIPS 207)
+    pub type U2241 = uint!(1 0 0 0 0 0 1 1 0 0 0 1);
+    pub type U4433 = uint!(1 0 0 0 1 0 1 0 1 0 0 0 1);
+    pub type U4514 = uint!(0 1 0 0 0 1 0 1 1 0 0 0 1);
+    pub type U7237 = uint!(1 0 1 0 0 0 1 0 0 0 1 1 1);
+    pub type U8978 = uint!(0 1 0 0 1 0 0 0 1 1 0 0 0 1);
+    pub type U14421 = uint!(1 0 1 0 1 0 1 0 0 0 0 1 1 1);
+
+    impl_array_sizes! {
+        hqc,
+        2241 => U2241,
+        4433 => U4433,
+        4514 => U4514,
+        7237 => U7237,
+        8978 => U8978,
+        14421 => U14421,
+    }
 }
