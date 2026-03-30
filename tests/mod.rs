@@ -10,6 +10,54 @@ const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
 const _FOO: ArrayN<u8, 4> = Array([1, 2, 3, 4]);
 
 #[test]
+fn as_ref_core_array() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let array_ref: &[u8; 2] = array.as_ref();
+    assert_eq!(&array, array_ref);
+}
+
+#[test]
+fn as_ref_identity() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let array_ref: &A = array.as_ref();
+    assert_eq!(&array, array_ref);
+}
+
+#[test]
+fn as_ref_slice() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let slice: &[u8] = array.as_ref();
+    assert_eq!(array.as_slice(), slice);
+}
+
+#[test]
+fn as_mut_core_array() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let array_ref: &mut [u8; 2] = array.as_mut();
+    assert_eq!(&[1, 2], array_ref);
+}
+
+#[test]
+fn as_mut_identity() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let array_ref: &mut A = array.as_mut();
+    assert_eq!(&[1, 2], array_ref);
+}
+
+#[test]
+fn as_mut_slice() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let slice: &mut [u8] = array.as_mut();
+    assert_eq!(&[1, 2], slice);
+}
+
+#[test]
 fn cast_slice_from_core() {
     type A = Array<u8, U2>;
     let slice = A::cast_slice_from_core(&[[1, 2], [3, 4]]);
