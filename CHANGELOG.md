@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.9 (2026-03-30)
+### Added
+- Functions for casting from core references ([#181])
+  - `Array::cast_from_core`: `const fn` equivalent of `From<[T; N]>`
+  - `Array::cast_from_core_mut`: `mut` equivalent of the above
+  - `Array::from_ref`: cast `&T` to `&Array<T; U1>`
+  - `Array::from_mut`: `mut` equivalent of the above
+
+[#181]: https://github.com/RustCrypto/hybrid-array/pull/181
+
 ## 0.4.8 (2026-03-08)
 ### Added
 - `ctutils` support ([#177])
