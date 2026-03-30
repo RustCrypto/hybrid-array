@@ -57,6 +57,22 @@ jobs:
           components: clippy
       - run: cargo clippy --all-targets --all-features -- -D warnings
 
+  # Generate code coverage and report to codecov.io
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools
+      - uses: taiki-e/install-action@cargo-llvm-cov
+      - run: cargo llvm-cov --all-features --lcov --output-path lcov.info
+        env:
+          CARGO_HUSKY_DONT_INSTALL_HOOKS: true
+      - uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+
   doc:
     runs-on: ubuntu-latest
     steps:
