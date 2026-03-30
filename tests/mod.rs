@@ -50,6 +50,49 @@ fn slice_as_mut_array() {
 }
 
 #[test]
+fn slice_as_chunks() {
+    type A = Array<u8, U2>;
+
+    let (slice_empty, rem_empty) = A::slice_as_chunks(&[]);
+    assert!(slice_empty.is_empty());
+    assert!(rem_empty.is_empty());
+
+    let (slice_one, rem_one) = A::slice_as_chunks(&[1]);
+    assert!(slice_one.is_empty());
+    assert_eq!(rem_one, &[1]);
+
+    let (slice_aligned, rem_aligned) = A::slice_as_chunks(&[1u8, 2]);
+    assert_eq!(slice_aligned, &[Array([1u8, 2])]);
+    assert_eq!(rem_aligned, &[]);
+
+    let (slice_unaligned, rem_unaligned) = A::slice_as_chunks(&[1u8, 2, 3]);
+    assert_eq!(slice_unaligned, &[Array([1u8, 2])]);
+    assert_eq!(rem_unaligned, &[3]);
+}
+
+#[test]
+fn slice_as_chunks_mut() {
+    type A = Array<u8, U2>;
+    let mut input = [1u8, 2, 3];
+
+    let (slice_empty, rem_empty) = A::slice_as_chunks_mut(&mut []);
+    assert!(slice_empty.is_empty());
+    assert!(rem_empty.is_empty());
+
+    let (slice_one, rem_one) = A::slice_as_chunks_mut(&mut input[..1]);
+    assert!(slice_one.is_empty());
+    assert_eq!(rem_one, &[1]);
+
+    let (slice_aligned, rem_aligned) = A::slice_as_chunks_mut(&mut input[..2]);
+    assert_eq!(slice_aligned, &[Array([1u8, 2])]);
+    assert_eq!(rem_aligned, &[]);
+
+    let (slice_unaligned, rem_unaligned) = A::slice_as_chunks_mut(&mut input);
+    assert_eq!(slice_unaligned, &[Array([1u8, 2])]);
+    assert_eq!(rem_unaligned, &[3]);
+}
+
+#[test]
 fn concat() {
     let prefix = Array::<u8, U2>::try_from(&EXAMPLE_SLICE[..2]).unwrap();
     let suffix = Array::<u8, U4>::try_from(&EXAMPLE_SLICE[2..]).unwrap();
