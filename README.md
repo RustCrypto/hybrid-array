@@ -3,6 +3,7 @@
 [![crate][crate-image]][crate-link]
 [![Docs][docs-image]][docs-link]
 [![Build Status][build-image]][build-link]
+[![codecov][coverage-image]][coverage-link]
 ![Apache2/MIT licensed][license-image]
 ![Rust Version][rustc-image]
 [![Project Chat][chat-image]][chat-link]
@@ -53,6 +54,8 @@ dual licensed as above, without any additional terms or conditions.
 [docs-link]: https://docs.rs/hybrid-array/
 [build-image]: https://github.com/RustCrypto/hybrid-array/actions/workflows/hybrid-array.yml/badge.svg?branch=master
 [build-link]: https://github.com/RustCrypto/hybrid-array/actions/workflows/hybrid-array.yml?query=branch:master
+[coverage-image]: https://codecov.io/gh/RustCrypto/hybrid-array/graph/badge.svg?token=Z92NHFQ70G
+[coverage-link]: https://codecov.io/gh/RustCrypto/hybrid-array
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [rustc-image]: https://img.shields.io/badge/rustc-1.85+-blue.svg
 [chat-image]: https://img.shields.io/badge/zulip-join_chat-blue.svg
