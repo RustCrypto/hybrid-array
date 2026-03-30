@@ -28,6 +28,9 @@ subtle = { version = "2", optional = true, default-features = false, features = 
 zeroize = { version = "1.8", optional = true, default-features = false }
 zerocopy = { version = "0.8", optional = true, features = ["derive"] }
 
+[dev-dependencies]
+postcard = { version = "1", default-features = false, features = ["alloc"] }
+
 [features]
 alloc = []
 extra-sizes = []
