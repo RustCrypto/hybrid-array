@@ -10,6 +10,23 @@ const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
 const _FOO: ArrayN<u8, 4> = Array([1, 2, 3, 4]);
 
 #[test]
+fn cast_slice_from_core() {
+    type A = Array<u8, U2>;
+    let slice = A::cast_slice_from_core(&[[1, 2], [3, 4]]);
+    assert_eq!(slice[0], Array([1, 2]));
+    assert_eq!(slice[1], Array([3, 4]));
+}
+
+#[test]
+fn cast_slice_from_core_mut() {
+    type A = Array<u8, U2>;
+    let mut arr = [[1, 2], [3, 4]];
+    let slice = A::cast_slice_from_core_mut(&mut arr);
+    assert_eq!(slice[0], Array([1, 2]));
+    assert_eq!(slice[1], Array([3, 4]));
+}
+
+#[test]
 fn tryfrom_slice_for_clonable_array() {
     assert!(Array::<u8, U0>::try_from(EXAMPLE_SLICE).is_err());
     assert!(Array::<u8, U3>::try_from(EXAMPLE_SLICE).is_err());
