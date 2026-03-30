@@ -69,3 +69,17 @@ where
         seq.end()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{Array, sizes::U3};
+    type A = Array<u8, U3>;
+
+    #[test]
+    fn round_trip() {
+        let example: A = Array([1, 2, 3]);
+        let bytes = postcard::to_allocvec(&example).unwrap();
+        let deserialized: A = postcard::from_bytes(&bytes).unwrap();
+        assert_eq!(example, deserialized);
+    }
+}
