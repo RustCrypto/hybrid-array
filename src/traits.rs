@@ -220,6 +220,16 @@ mod tests {
     }
 
     #[test]
+    fn hybrid_as_array_ref() {
+        assert_eq!(A::from([1, 2]).as_array_ref(), &Array([1, 2]));
+    }
+
+    #[test]
+    fn hybrid_as_array_mut() {
+        assert_eq!(A::from([1, 2]).as_array_mut(), &Array([1, 2]));
+    }
+
+    #[test]
     fn slice_as_hybrid_array() {
         assert_eq!([1, 2].as_hybrid_array::<U3>(), None);
         assert_eq!([1, 2, 3].as_hybrid_array::<U3>(), Some(&Array([1, 2, 3])));
