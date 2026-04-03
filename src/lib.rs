@@ -1211,17 +1211,13 @@ where
 }
 
 /// Generate a [`TryFromSliceError`] if the slice doesn't match the given length.
-#[cfg_attr(debug_assertions, allow(clippy::panic_in_result_fn))]
 fn check_slice_length<T, U: ArraySize>(slice: &[T]) -> Result<(), TryFromSliceError> {
     debug_assert_eq!(Array::<(), U>::default().len(), U::USIZE);
 
-    if slice.len() != U::USIZE {
-        // Hack: `TryFromSliceError` lacks a public constructor
-        <&[T; 1]>::try_from([].as_slice())?;
-
-        #[cfg(debug_assertions)]
-        unreachable!();
+    if slice.len() == U::USIZE {
+        Ok(())
+    } else {
+        // Hack: `TryFromSliceError` lacks a public constructor, so this fakes one
+        <&[T; 1]>::try_from([].as_slice()).map(|_| ())
     }
-
-    Ok(())
 }
