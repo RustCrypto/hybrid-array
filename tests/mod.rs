@@ -1,6 +1,11 @@
-#![allow(missing_docs, clippy::cast_possible_truncation, clippy::unwrap_used)]
+//! Integration tests.
 
-use core::mem::MaybeUninit;
+#![allow(clippy::cast_possible_truncation, clippy::unwrap_used)]
+
+use core::{
+    borrow::{Borrow, BorrowMut},
+    mem::MaybeUninit,
+};
 use hybrid_array::{Array, ArrayN};
 use typenum::{U0, U2, U3, U4, U5, U6, U7};
 
@@ -65,6 +70,38 @@ fn as_mut_slice() {
     let mut array: A = Array([1, 2]);
     let slice: &mut [u8] = array.as_mut();
     assert_eq!(&[1, 2], slice);
+}
+
+#[test]
+fn borrow_core_array() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let array_ref: &[u8; 2] = array.borrow();
+    assert_eq!(&array, array_ref);
+}
+
+#[test]
+fn borrow_identity() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let array_ref: &A = array.borrow();
+    assert_eq!(&array, array_ref);
+}
+
+#[test]
+fn borrow_mut_identity() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let array_ref: &mut A = array.borrow_mut();
+    assert_eq!(&[1, 2], array_ref);
+}
+
+#[test]
+fn borrow_mut_core_array() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let array_ref: &mut [u8; 2] = array.borrow_mut();
+    assert_eq!(&[1, 2], array_ref);
 }
 
 #[test]
