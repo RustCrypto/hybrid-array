@@ -10,6 +10,16 @@ const EXAMPLE_SLICE: &[u8] = &[1, 2, 3, 4, 5, 6];
 const _FOO: ArrayN<u8, 4> = Array([1, 2, 3, 4]);
 
 #[test]
+fn as_flattened() {
+    type A = Array<u8, U2>;
+    type B = Array<A, U2>;
+
+    let mut array: B = Array([Array([b't', b'e']), Array([b's', b't'])]);
+    assert_eq!(array.as_flattened(), b"test");
+    assert_eq!(array.as_flattened_mut(), b"test");
+}
+
+#[test]
 fn as_ref_core_array() {
     type A = Array<u8, U2>;
     let array: A = Array([1, 2]);
