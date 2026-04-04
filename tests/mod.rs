@@ -400,6 +400,32 @@ fn slice_as_flattened() {
     assert_eq!(Array::slice_as_flattened(slice), &[1, 2, 3, 4, 5, 6, 7, 8]);
 }
 
+#[cfg(feature = "alloc")]
+mod allocating {
+    use super::*;
+    use typenum::U4;
+
+    #[test]
+    fn boxed_slice_from_array() {
+        let array: Array<u8, U4> = Array([1, 2, 3, 4]);
+        let boxed_slice1: Box<[u8]> = Box::from(array);
+        assert_eq!(&*boxed_slice1, &[1, 2, 3, 4]);
+
+        let boxed_slice2: Box<[u8]> = Box::from(&array);
+        assert_eq!(&*boxed_slice2, &[1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn vec_from_array() {
+        let array: Array<u8, U4> = Array([1, 2, 3, 4]);
+        let vec1: Vec<u8> = Vec::from(array);
+        assert_eq!(&vec1, &[1, 2, 3, 4]);
+
+        let vec2: Vec<u8> = Vec::from(&array);
+        assert_eq!(&*vec2, &[1, 2, 3, 4]);
+    }
+}
+
 #[test]
 #[cfg(feature = "zerocopy")]
 #[allow(unused)]
