@@ -156,6 +156,48 @@ fn cast_slice_to_core_mut() {
 }
 
 #[test]
+fn from_hybrid_array_for_core_array() {
+    let hybrid_arr: Array<u8, U2> = Array([1, 2]);
+    let core_arr = <[u8; 2]>::from(hybrid_arr);
+    assert_eq!(core_arr, [1, 2]);
+}
+
+#[test]
+fn from_hybrid_ref_for_core_ref() {
+    let hybrid_arr: &Array<u8, U2> = &Array([1, 2]);
+    let core_arr = <&[u8; 2]>::from(hybrid_arr);
+    assert_eq!(core_arr, &[1, 2]);
+}
+
+#[test]
+fn from_hybrid_mut_for_core_mut() {
+    let hybrid_arr: &mut Array<u8, U2> = &mut Array([1, 2]);
+    let core_arr = <&mut [u8; 2]>::from(hybrid_arr);
+    assert_eq!(core_arr, &[1, 2]);
+}
+
+#[test]
+fn from_ref() {
+    let n = 42u64;
+    let array = Array::from_ref(&n);
+    assert_eq!(array[0], n);
+}
+
+#[test]
+fn from_mut() {
+    let mut n = 42u64;
+    let array = Array::from_mut(&mut n);
+    array[0] = 43;
+    assert_eq!(n, 43);
+}
+
+#[test]
+fn from_fn() {
+    let array = Array::<u8, U6>::from_fn(|n| (n + 1) as u8);
+    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
+}
+
+#[test]
 fn tryfrom_slice_for_clonable_array() {
     assert!(Array::<u8, U0>::try_from(EXAMPLE_SLICE).is_err());
     assert!(Array::<u8, U3>::try_from(EXAMPLE_SLICE).is_err());
@@ -272,27 +314,6 @@ fn split_ref_mut() {
 
     assert_eq!(prefix.as_slice(), &EXAMPLE_SLICE[..4]);
     assert_eq!(suffix.as_slice(), &EXAMPLE_SLICE[4..]);
-}
-
-#[test]
-fn from_ref() {
-    let n = 42u64;
-    let array = Array::from_ref(&n);
-    assert_eq!(array[0], n);
-}
-
-#[test]
-fn from_mut() {
-    let mut n = 42u64;
-    let array = Array::from_mut(&mut n);
-    array[0] = 43;
-    assert_eq!(n, 43);
-}
-
-#[test]
-fn from_fn() {
-    let array = Array::<u8, U6>::from_fn(|n| (n + 1) as u8);
-    assert_eq!(array.as_slice(), EXAMPLE_SLICE);
 }
 
 #[test]
