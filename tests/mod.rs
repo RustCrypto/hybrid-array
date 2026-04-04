@@ -89,6 +89,14 @@ fn borrow_identity() {
 }
 
 #[test]
+fn borrow_slice() {
+    type A = Array<u8, U2>;
+    let array: A = Array([1, 2]);
+    let slice: &[u8] = array.borrow();
+    assert_eq!(array.as_slice(), slice);
+}
+
+#[test]
 fn borrow_mut_identity() {
     type A = Array<u8, U2>;
     let mut array: A = Array([1, 2]);
@@ -102,6 +110,14 @@ fn borrow_mut_core_array() {
     let mut array: A = Array([1, 2]);
     let array_ref: &mut [u8; 2] = array.borrow_mut();
     assert_eq!(&[1, 2], array_ref);
+}
+
+#[test]
+fn borrow_mut_slice() {
+    type A = Array<u8, U2>;
+    let mut array: A = Array([1, 2]);
+    let slice: &mut [u8] = array.borrow_mut();
+    assert_eq!(&[1, 2], slice);
 }
 
 #[test]
