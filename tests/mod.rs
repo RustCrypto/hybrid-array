@@ -220,6 +220,20 @@ fn tryfrom_slice_for_array_ref() {
 }
 
 #[test]
+fn tryfrom_mut_slice_for_array_mut() {
+    let mut example_arr = [1, 2, 3, 4, 5, 6];
+
+    assert!(<&mut Array<u8, U0>>::try_from(example_arr.as_mut()).is_err());
+    assert!(<&mut Array::<u8, U3>>::try_from(example_arr.as_mut()).is_err());
+
+    let array_ref =
+        <&mut Array<u8, U6>>::try_from(example_arr.as_mut()).expect("slice contains 6 bytes");
+    assert_eq!(array_ref.as_slice(), EXAMPLE_SLICE);
+
+    assert!(<&mut Array::<u8, U7>>::try_from(example_arr.as_mut()).is_err());
+}
+
+#[test]
 fn slice_as_array() {
     type A = Array<u8, U2>;
     assert_eq!(A::slice_as_array(&[]), None);
