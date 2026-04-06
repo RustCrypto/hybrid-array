@@ -4,6 +4,7 @@
 
 use core::{
     borrow::{Borrow, BorrowMut},
+    cmp::Ordering,
     mem::MaybeUninit,
 };
 use hybrid_array::{Array, ArrayN};
@@ -153,6 +154,30 @@ fn cast_slice_to_core_mut() {
     let slice = A::cast_slice_to_core_mut(&mut arr);
     assert_eq!(slice[0], [1, 2]);
     assert_eq!(slice[1], [3, 4]);
+}
+
+#[test]
+fn cmp() {
+    type A = Array<u8, U2>;
+    let a1: A = Array([0, 0]);
+    let a2: A = Array([0, 1]);
+    let a3: A = Array([1, 0]);
+
+    assert_eq!(a1.cmp(&a1), Ordering::Equal);
+    assert_eq!(a1.cmp(&a2), Ordering::Less);
+    assert_eq!(a2.cmp(&a1), Ordering::Greater);
+    assert_eq!(a2.cmp(&a2), Ordering::Equal);
+    assert_eq!(a2.cmp(&a3), Ordering::Less);
+    assert_eq!(a3.cmp(&a2), Ordering::Greater);
+    assert_eq!(a3.cmp(&a3), Ordering::Equal);
+
+    assert_eq!(a1.partial_cmp(&a1), Some(Ordering::Equal));
+    assert_eq!(a1.partial_cmp(&a2), Some(Ordering::Less));
+    assert_eq!(a2.partial_cmp(&a1), Some(Ordering::Greater));
+    assert_eq!(a2.partial_cmp(&a2), Some(Ordering::Equal));
+    assert_eq!(a2.partial_cmp(&a3), Some(Ordering::Less));
+    assert_eq!(a3.partial_cmp(&a2), Some(Ordering::Greater));
+    assert_eq!(a3.partial_cmp(&a3), Some(Ordering::Equal));
 }
 
 #[test]
