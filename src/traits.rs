@@ -258,7 +258,7 @@ mod tests {
 
         let (slice_aligned, rem_aligned) = [1u8, 2].as_hybrid_chunks::<U2>();
         assert_eq!(slice_aligned, &[Array([1u8, 2])]);
-        assert_eq!(rem_aligned, &[]);
+        assert_eq!(rem_aligned, b"");
 
         let (slice_unaligned, rem_unaligned) = [1u8, 2, 3].as_hybrid_chunks::<U2>();
         assert_eq!(slice_unaligned, &[Array([1u8, 2])]);
@@ -279,7 +279,7 @@ mod tests {
         let mut arr2 = [1u8, 2];
         let (slice_aligned, rem_aligned) = arr2.as_hybrid_chunks_mut::<U2>();
         assert_eq!(slice_aligned, &mut [Array([1u8, 2])]);
-        assert_eq!(rem_aligned, &mut []);
+        assert_eq!(rem_aligned, b"");
 
         let mut arr3 = [1u8, 2, 3];
         let (slice_unaligned, rem_unaligned) = arr3.as_hybrid_chunks_mut::<U2>();
