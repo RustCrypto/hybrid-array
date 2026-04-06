@@ -190,6 +190,36 @@ fn from_ref() {
 }
 
 #[test]
+#[allow(deprecated)]
+fn from_slice_deprecated() {
+    let slice = &[1, 2];
+    assert_eq!(Array::<u8, U2>::from_slice(slice), slice);
+}
+
+#[test]
+#[allow(deprecated)]
+#[should_panic]
+fn from_slice_deprecated_length_mismatch() {
+    let slice = &[1, 2, 3];
+    Array::<u8, U2>::from_slice(slice);
+}
+
+#[test]
+#[allow(deprecated)]
+fn from_mut_slice_deprecated() {
+    let slice = &mut [1, 2];
+    assert_eq!(Array::<u8, U2>::from_mut_slice(slice), &[1, 2]);
+}
+
+#[test]
+#[allow(deprecated)]
+#[should_panic]
+fn from_mut_slice_deprecated_length_mismatch() {
+    let slice = &mut [1, 2, 3];
+    Array::<u8, U2>::from_mut_slice(slice);
+}
+
+#[test]
 fn from_mut() {
     let mut n = 42u64;
     let array = Array::from_mut(&mut n);
