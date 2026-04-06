@@ -456,6 +456,23 @@ mod allocating {
     use typenum::U4;
 
     #[test]
+    fn array_try_from_boxed_slice() {
+        type A = Array<u8, U2>;
+        assert!(A::try_from(vec![1].into_boxed_slice()).is_err());
+        assert_eq!(
+            &A::try_from(vec![1, 2].into_boxed_slice()).unwrap(),
+            &[1, 2]
+        );
+    }
+
+    #[test]
+    fn array_try_from_vec() {
+        type A = Array<u8, U2>;
+        assert!(A::try_from(vec![1]).is_err());
+        assert_eq!(&A::try_from(vec![1, 2]).unwrap(), &[1, 2]);
+    }
+
+    #[test]
     fn boxed_slice_from_array() {
         let array: Array<u8, U4> = Array([1, 2, 3, 4]);
         let boxed_slice1: Box<[u8]> = Box::from(array);

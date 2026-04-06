@@ -996,14 +996,14 @@ where
 #[cfg(feature = "alloc")]
 impl<T, U> TryFrom<alloc::boxed::Box<[T]>> for Array<T, U>
 where
-    Self: Clone,
     U: ArraySize,
 {
     type Error = TryFromSliceError;
 
     #[inline]
     fn try_from(b: alloc::boxed::Box<[T]>) -> Result<Self, TryFromSliceError> {
-        Self::try_from(&*b)
+        check_slice_length::<T, U>(b.as_ref())?;
+        Ok(Array::from_iter(b))
     }
 }
 
@@ -1024,14 +1024,14 @@ where
 #[cfg(feature = "alloc")]
 impl<T, U> TryFrom<alloc::vec::Vec<T>> for Array<T, U>
 where
-    Self: Clone,
     U: ArraySize,
 {
     type Error = TryFromSliceError;
 
     #[inline]
     fn try_from(v: alloc::vec::Vec<T>) -> Result<Self, TryFromSliceError> {
-        Self::try_from(v.as_slice())
+        check_slice_length::<T, U>(v.as_ref())?;
+        Ok(Array::from_iter(v))
     }
 }
 
