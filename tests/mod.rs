@@ -259,6 +259,24 @@ fn from_fn() {
 }
 
 #[test]
+#[allow(clippy::std_instead_of_core)]
+fn hash() {
+    use std::hash::{DefaultHasher, Hash, Hasher};
+
+    type A = Array<u8, U2>;
+    let array1: A = Array([1, 2]);
+    let array2: A = Array([1, 3]);
+
+    let mut hasher1 = DefaultHasher::new();
+    array1.hash(&mut hasher1);
+
+    let mut hasher2 = DefaultHasher::new();
+    array2.hash(&mut hasher2);
+
+    assert_ne!(hasher1.finish(), hasher2.finish());
+}
+
+#[test]
 fn tryfrom_slice_for_clonable_array() {
     assert!(Array::<u8, U0>::try_from(EXAMPLE_SLICE).is_err());
     assert!(Array::<u8, U3>::try_from(EXAMPLE_SLICE).is_err());
