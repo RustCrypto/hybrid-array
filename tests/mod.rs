@@ -156,6 +156,12 @@ fn cast_slice_to_core_mut() {
 }
 
 #[test]
+fn debug() {
+    let arr: Array<u8, U3> = Array([1, 2, 3]);
+    assert_eq!(format!("{arr:?}"), "Array([1, 2, 3])");
+}
+
+#[test]
 fn from_hybrid_array_for_core_array() {
     let hybrid_arr: Array<u8, U2> = Array([1, 2]);
     let core_arr = <[u8; 2]>::from(hybrid_arr);
