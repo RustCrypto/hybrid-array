@@ -518,12 +518,22 @@ mod allocating {
     }
 }
 
-#[test]
 #[cfg(feature = "zerocopy")]
+#[test]
 #[allow(unused)]
 fn zerocopy_traits() {
     use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
     struct Check<T: IntoBytes + FromBytes + Unaligned + Immutable + KnownLayout>(T);
     let ok: Check<Array<u8, U5>> = Check(Array([1, 2, 3, 4, 5]));
     // let not_unaligned:  Check::<Array<u16, U5>> = Check(Array([1, 2, 3, 4, 5]));
+}
+
+#[cfg(feature = "zeroize")]
+#[test]
+fn zeroize_array() {
+    use zeroize::Zeroize;
+
+    let mut array: Array<u8, U3> = Array([1, 2, 3]);
+    array.zeroize();
+    assert_eq!(&array, &[0, 0, 0]);
 }
