@@ -553,6 +553,15 @@ mod allocating {
     }
 }
 
+#[cfg(feature = "arbitrary")]
+#[test]
+fn arbitrary() {
+    use arbitrary::{Arbitrary, Unstructured};
+    let mut unstructured = Unstructured::new(EXAMPLE_SLICE);
+    let array = Array::<u8, U4>::arbitrary(&mut unstructured).unwrap();
+    assert_eq!(array.as_slice(), &[1, 2, 3, 4]);
+}
+
 #[cfg(feature = "zerocopy")]
 #[test]
 #[allow(unused)]
