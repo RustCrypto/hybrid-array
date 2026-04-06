@@ -76,10 +76,18 @@ mod tests {
     type A = Array<u8, U3>;
 
     #[test]
+    #[cfg(feature = "alloc")]
+    fn expecting() {
+        use alloc::string::ToString;
+        let err = serde_json::from_str::<A>("true").unwrap_err();
+        assert!(err.to_string().contains("expected an array of length 3"));
+    }
+
+    #[test]
     fn round_trip() {
         let example: A = Array([1, 2, 3]);
-        let bytes = postcard::to_allocvec(&example).unwrap();
-        let deserialized: A = postcard::from_bytes(&bytes).unwrap();
+        let s = serde_json::to_string(&example).unwrap();
+        let deserialized: A = serde_json::from_str(&s).unwrap();
         assert_eq!(example, deserialized);
     }
 }
