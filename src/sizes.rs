@@ -849,6 +849,13 @@ mod extra_sizes {
     pub type U1530 = uint!(0 1 0 1 1 1 1 1 1 0 1);
     pub type U1658 = uint!(0 1 0 1 1 1 1 0 0 1 1);
 
+    // HPKE Hybrid KEM sizes
+    // - MLKEM768-P256
+    pub type U1153 = uint!(1 0 0 0 0 0 0 1 0 0 1);
+    pub type U1249 = uint!(1 0 0 0 0 1 1 1 0 0 1);
+    // - MLKEM1024-P384
+    pub type U1665 = uint!(1 0 0 0 0 0 0 1 0 1 1);
+
     // LMS sizes
     pub type U2047 = uint!(1 1 1 1 1 1 1 1 1 1 1);
     pub type U2180 = uint!(0 0 1 0 0 0 0 1 0 0 0 1);
@@ -1108,6 +1115,14 @@ mod extra_sizes {
         1498 => U1498,
         1530 => U1530,
         1658 => U1658,
+    }
+
+    // HPKE Hybrid KEM sizes
+    impl_array_sizes! {
+        hpke_hybrid,
+        1153 => U1153,
+        1249 => U1249,
+        1665 => U1665,
     }
 
     // LMS sizes
