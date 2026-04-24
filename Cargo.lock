@@ -31,7 +31,7 @@ dependencies = [
 
 [[package]]
 name = "hybrid-array"
-version = "0.4.10"
+version = "0.4.11"
 dependencies = [
  "arbitrary",
  "bytemuck",

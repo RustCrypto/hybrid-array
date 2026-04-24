@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.11 (2026-04-24)
+### Added
+- HPKE Hybrid KEM sizes ([#218])
+
+### Removed
+- `Clone` bounds on `Box`/`Vec` conversions ([#209])
+
+[#209]: https://github.com/RustCrypto/hybrid-array/pull/209
+[#218]: https://github.com/RustCrypto/hybrid-array/pull/218
+
 ## 0.4.10 (2026-03-31)
 ### Added
 - `AsMut<Array<T, U>>` impl for `Array<T, U>` ([#193])
