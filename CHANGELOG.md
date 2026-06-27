@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.13 (2026-06-27)
+### Added
+- `ArraySize` for `U521` and `U522` for NIST P-521 ([#228])
+
+[#228]: https://github.com/RustCrypto/hybrid-array/pull/228
+
 ## 0.4.12 (2026-05-09)
 ### Added
 - `ArraySize` impls for Classic McEliece ([#220])
