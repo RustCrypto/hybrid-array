@@ -883,6 +883,25 @@ mod extra_sizes {
     pub type U21632 = uint!(0 0 0 0 0 0 0 1 0 0 1 0 1 0 1);
     pub type U21696 = uint!(0 0 0 0 0 0 1 1 0 0 1 0 1 0 1);
 
+    // Streamlined NTRU Prime sizes
+    pub type U897 = uint!(1 0 0 0 0 0 0 1 1 1);
+    pub type U994 = uint!(0 1 0 0 0 1 1 1 1 1);
+    pub type U1039 = uint!(1 1 1 1 0 0 0 0 0 0 1);
+    pub type U1158 = uint!(0 1 1 0 0 0 0 1 0 0 1);
+    pub type U1322 = uint!(0 1 0 1 0 1 0 0 1 0 1);
+    pub type U1349 = uint!(1 0 1 0 0 0 1 0 1 0 1);
+    pub type U1455 = uint!(1 1 1 1 0 1 0 1 1 0 1);
+    pub type U1505 = uint!(1 0 0 0 0 1 1 1 1 0 1);
+    pub type U1518 = uint!(0 1 1 1 0 1 1 1 1 0 1);
+    pub type U1623 = uint!(1 1 1 0 1 0 1 0 0 1 1);
+    pub type U1763 = uint!(1 1 0 0 0 1 1 1 0 1 1);
+    pub type U1847 = uint!(1 1 1 0 1 1 0 0 1 1 1);
+    pub type U1999 = uint!(1 1 1 1 0 0 1 1 1 1 1);
+    pub type U2067 = uint!(1 1 0 0 1 0 0 0 0 0 0 1);
+    pub type U2254 = uint!(0 1 1 1 0 0 1 1 0 0 0 1);
+    pub type U2417 = uint!(1 0 0 0 1 1 1 0 1 0 0 1);
+    pub type U3059 = uint!(1 1 0 0 1 1 1 1 1 1 0 1);
+
     // HKDF-Expand common max output sizes
     pub type U8160 = uint!(0 0 0 0 0 1 1 1 1 1 1 1 1);
     pub type U12240 = uint!(0 0 0 0 1 0 1 1 1 1 1 1 0 1);
@@ -1151,6 +1170,28 @@ mod extra_sizes {
         43088 => U43088,
         21632 => U21632,
         21696 => U21696,
+    }
+
+    // Streamlined NTRU Prime sizes
+    impl_array_sizes! {
+        sntrup,
+        897 => U897,
+        994 => U994,
+        1039 => U1039,
+        1158 => U1158,
+        1322 => U1322,
+        1349 => U1349,
+        1455 => U1455,
+        1505 => U1505,
+        1518 => U1518,
+        1623 => U1623,
+        1763 => U1763,
+        1847 => U1847,
+        1999 => U1999,
+        2067 => U2067,
+        2254 => U2254,
+        2417 => U2417,
+        3059 => U3059,
     }
 
     // HKDF-Expand common max output sizes
