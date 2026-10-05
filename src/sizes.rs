@@ -860,10 +860,30 @@ mod extra_sizes {
     pub type U1665 = uint!(1 0 0 0 0 0 0 1 0 1 1);
 
     // LMS sizes
+    pub type U1292 = uint!(0 0 1 1 0 0 0 0 1 0 1);
+    pub type U1452 = uint!(0 0 1 1 0 1 0 1 1 0 1);
+    pub type U1612 = uint!(0 0 1 1 0 0 1 0 0 1 1);
+    pub type U1772 = uint!(0 0 1 1 0 1 1 1 0 1 1);
+    pub type U1932 = uint!(0 0 1 1 0 0 0 1 1 1 1);
     pub type U2047 = uint!(1 1 1 1 1 1 1 1 1 1 1);
     pub type U2180 = uint!(0 0 1 0 0 0 0 1 0 0 0 1);
+    pub type U2348 = uint!(0 0 1 1 0 1 0 0 1 0 0 1);
+    pub type U2508 = uint!(0 0 1 1 0 0 1 1 1 0 0 1);
+    pub type U2668 = uint!(0 0 1 1 0 1 1 0 0 1 0 1);
+    pub type U2828 = uint!(0 0 1 1 0 0 0 0 1 1 0 1);
+    pub type U2988 = uint!(0 0 1 1 0 1 0 1 1 1 0 1);
     pub type U4292 = uint!(0 0 1 0 0 0 1 1 0 0 0 0 1);
+    pub type U4460 = uint!(0 0 1 1 0 1 1 0 1 0 0 0 1);
+    pub type U4620 = uint!(0 0 1 1 0 0 0 0 0 1 0 0 1);
+    pub type U4780 = uint!(0 0 1 1 0 1 0 1 0 1 0 0 1);
+    pub type U4940 = uint!(0 0 1 1 0 0 1 0 1 1 0 0 1);
+    pub type U5100 = uint!(0 0 1 1 0 1 1 1 1 1 0 0 1);
     pub type U8516 = uint!(0 0 1 0 0 0 1 0 1 0 0 0 0 1);
+    pub type U8684 = uint!(0 0 1 1 0 1 1 1 1 0 0 0 0 1);
+    pub type U8844 = uint!(0 0 1 1 0 0 0 1 0 1 0 0 0 1);
+    pub type U9004 = uint!(0 0 1 1 0 1 0 0 1 1 0 0 0 1);
+    pub type U9164 = uint!(0 0 1 1 0 0 1 1 1 1 0 0 0 1);
+    pub type U9324 = uint!(0 0 1 1 0 1 1 0 0 0 1 0 0 1);
 
     // FrodoKEM640 sizes
 
@@ -1150,10 +1170,30 @@ mod extra_sizes {
     // LMS sizes
     impl_array_sizes! {
         lms,
+        1292 => U1292,
+        1452 => U1452,
+        1612 => U1612,
+        1772 => U1772,
+        1932 => U1932,
         2047 => U2047,
         2180 => U2180,
+        2348 => U2348,
+        2508 => U2508,
+        2668 => U2668,
+        2828 => U2828,
+        2988 => U2988,
         4292 => U4292,
+        4460 => U4460,
+        4620 => U4620,
+        4780 => U4780,
+        4940 => U4940,
+        5100 => U5100,
         8516 => U8516,
+        8684 => U8684,
+        8844 => U8844,
+        9004 => U9004,
+        9164 => U9164,
+        9324 => U9324,
     }
 
     // Frodo sizes
