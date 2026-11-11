@@ -567,19 +567,18 @@ where
             //
             // As such, we use `transmute_copy`, which reinterprets `&U::ArrayType<MaybeUninit<T>>` as
             // `&U::ArrayType<T>', which functionally means `&[MaybeUninit<T>; N]` as `&[T; N]` and then
-            // dereferences the result to obtain a copy. Because of this, `transmute_copy(&self)` does
-            // not move out of `self` and the destructor for U::ArrayType<MaybeUninit<T>> still runs when
-            // dropping `self`.
-            //
-            // To resolve the issue of `self` still being dropped, we first move `self` into
-            // `ManuallyDrop`, which is also `repr(transparent)`. We then create a reference, which is
-            // transmuted into a copy (with live destructors), and then implicitly drop the
-            // `ManuallyDrop`, not running any destructors, as the data is now managed by the copy that
-            // was just produced.
+            // dereferences the result to obtain a copy.
             //
             // Since we have unique ownership of `self`, it's okay to make a copy because we're throwing
             // the original away (and this should all get optimized to a noop by the compiler, anyway).
-            mem::transmute_copy(&ManuallyDrop::new(self))
+            let result = mem::transmute_copy(&self);
+
+            // At this point, we have two copies of the data, in `self` and `result`, since
+            // `transmute_copy` does not move out of `self`. The compiler is unable to deduce that all
+            // possible destructors for `self` are trivial and effectively noops, so we manually *forget*
+            // it by calling `mem::forget`. This is the "throwing away" mentioned in the above comment.
+            mem::forget(self);
+            result
         }
     }
 }
