@@ -557,20 +557,28 @@ where
     /// It is up to the caller to guarantee that all elements of the array are in an initialized
     /// state.
     #[inline]
-    pub unsafe fn assume_init(self) -> Array<T, U> {
+    pub const unsafe fn assume_init(self) -> Array<T, U> {
         unsafe {
             // `Array` is a `repr(transparent)` newtype for a generic inner type which is constrained to
-            // be `[T; N]` by the `ArraySize` impls in this crate.
+            // be `[T; N]` by the `ArraySize` impls in this crate. However, this is merely a SAFETY
+            // guideline and not checkable by the compiler. Therefore, the compiler's inability to verify
+            // that the sizes of `U::ArrayType<T>` and `U::ArrayType<MaybeUninit<T>>` does not allow us
+            // to use `transmute`.
             //
-            // Since we're working with a type-erased inner type and ultimately trying to convert
-            // `[MaybeUninit<T>; N]` to `[T; N]`, we can't use simpler approaches like a pointer cast
-            // or `transmute`, since the compiler can't prove to itself that the size will be the same.
+            // As such, we use `transmute_copy`, which reinterprets `&U::ArrayType<MaybeUninit<T>>` as
+            // `&U::ArrayType<T>', which functionally means `&[MaybeUninit<T>; N]` as `&[T; N]` and then
+            // dereferences the result to obtain a copy.
             //
-            // We've taken unique ownership of `self`, which is a `MaybeUninit` array, and as such we
-            // don't need to worry about `Drop` impls because `MaybeUninit` does not impl `Drop`.
             // Since we have unique ownership of `self`, it's okay to make a copy because we're throwing
             // the original away (and this should all get optimized to a noop by the compiler, anyway).
-            mem::transmute_copy(&self)
+            let result = mem::transmute_copy(&self);
+
+            // At this point, we have two copies of the data, in `self` and `result`, since
+            // `transmute_copy` does not move out of `self`. The compiler is unable to deduce that all
+            // possible destructors for `self` are trivial and effectively noops, so we manually *forget*
+            // it by calling `mem::forget`. This is the "throwing away" mentioned in the above comment.
+            mem::forget(self);
+            result
         }
     }
 }
